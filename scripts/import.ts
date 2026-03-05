@@ -146,9 +146,11 @@ async function importCards(filePath: string, withImages: boolean, limit?: number
     if (
       !card.id ||
       !card.name ||
+      card.layout === "token" ||
+      card.layout === "emblem" ||
+      card.set_type === "token" ||
       card.type_line?.toLowerCase().includes("token") ||
-      card.type_line?.toLowerCase().includes("emblem") ||
-      card.set?.startsWith("t")
+      card.type_line?.toLowerCase().includes("emblem")
     ) {
       skipped++;
       continue;
