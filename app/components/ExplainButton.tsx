@@ -7,6 +7,18 @@ interface ExplainButtonProps {
   initialExplanation?: string | null;
 }
 
+function parseExplanation(text: string): { whatItDoes: string; whyPlay: string } | null {
+  const whatMatch = text.match(/What it does:\s*([\s\S]*?)(?=Why you'd play it:|$)/i);
+  const whyMatch = text.match(/Why you'd play it:\s*([\s\S]*?)$/i);
+  if (whatMatch && whyMatch) {
+    return {
+      whatItDoes: whatMatch[1].trim(),
+      whyPlay: whyMatch[1].trim(),
+    };
+  }
+  return null;
+}
+
 export default function ExplainButton({ cardId, initialExplanation }: ExplainButtonProps) {
   const [explanation, setExplanation] = useState<string | null>(initialExplanation ?? null);
   const [loading, setLoading] = useState(false);
@@ -28,9 +40,35 @@ export default function ExplainButton({ cardId, initialExplanation }: ExplainBut
   };
 
   if (explanation) {
+    const parsed = parseExplanation(explanation);
     return (
-      <div style={{ border: "2px solid var(--accent)", padding: "20px" }}>
-        <p className="text-base leading-relaxed">{explanation}</p>
+      <div style={{ border: "2px solid var(--accent)" }}>
+        {parsed ? (
+          <>
+            <div style={{ padding: "16px 20px", borderBottom: "2px solid var(--accent)" }}>
+              <p
+                className="text-xs font-bold uppercase tracking-widest mb-2"
+                style={{ color: "var(--accent-light)" }}
+              >
+                What it does
+              </p>
+              <p className="text-base leading-relaxed">{parsed.whatItDoes}</p>
+            </div>
+            <div style={{ padding: "16px 20px" }}>
+              <p
+                className="text-xs font-bold uppercase tracking-widest mb-2"
+                style={{ color: "var(--accent-light)" }}
+              >
+                Why you&apos;d play it
+              </p>
+              <p className="text-base leading-relaxed">{parsed.whyPlay}</p>
+            </div>
+          </>
+        ) : (
+          <div style={{ padding: "20px" }}>
+            <p className="text-base leading-relaxed whitespace-pre-wrap">{explanation}</p>
+          </div>
+        )}
       </div>
     );
   }
@@ -39,7 +77,7 @@ export default function ExplainButton({ cardId, initialExplanation }: ExplainBut
     <div>
       {error && (
         <p
-          className="text-xs uppercase tracking-wide mb-3 p-2"
+          className="text-sm uppercase tracking-wide mb-3 p-2"
           style={{ color: "#ff4444", border: "2px solid #ff4444" }}
         >
           ERROR: {error}
@@ -54,7 +92,7 @@ export default function ExplainButton({ cardId, initialExplanation }: ExplainBut
           background: loading ? "var(--muted)" : "var(--accent)",
           color: "#fff",
           border: "2px solid var(--accent)",
-          fontSize: "13px",
+          fontSize: "15px",
           fontWeight: "bold",
           letterSpacing: "0.15em",
           textTransform: "uppercase",
