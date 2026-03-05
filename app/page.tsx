@@ -48,7 +48,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
         where,
         skip,
         take: PAGE_SIZE,
-        orderBy: { name: "asc" },
+        orderBy: { createdAt: "desc" },
         select: {
           id: true,
           name: true,
