@@ -5,56 +5,55 @@
  * the database, and optionally uploads card images to S3.
  *
  * Usage:
- *   npx tsx scripts/import.ts                 # import cards only
- *   npx tsx scripts/import.ts --with-images   # import + upload images to S3
- *   npx tsx scripts/import.ts --limit 1000    # only import first N cards
+ *   npx tsx scripts/import.ts                     # import cards only
+ *   npx tsx scripts/import.ts --with-images       # import + upload images to S3
+ *   npx tsx scripts/import.ts --limit=1000        # only import first N cards
+ *   npx tsx scripts/import.ts --skip-download     # use existing /tmp/scryfall-bulk.json
  */
 
-import { createWriteStream, existsSync } from "fs";
+import { createWriteStream, existsSync, readFileSync } from "fs";
 import { unlink } from "fs/promises";
-import { createReadStream } from "fs";
-import * as readline from "readline";
 import path from "path";
 import os from "os";
 import { PrismaClient } from "@prisma/client";
-import {
-  getBulkDataInfo,
-  getCardImageUrl,
-  type ScryfallCard,
-} from "../lib/scryfall";
+import { getBulkDataInfo, getCardImageUrl, type ScryfallCard } from "../lib/scryfall";
 import { uploadImageToS3, imageExistsOnS3 } from "../lib/s3";
 
 const prisma = new PrismaClient();
-
 const BATCH_SIZE = 500;
+const TMP_FILE = path.join(os.tmpdir(), "scryfall-bulk.json");
 
 async function downloadFile(url: string, dest: string): Promise<void> {
   console.log(`Downloading ${url}...`);
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Download failed: ${res.status}`);
 
-  await new Promise<void>((resolve, reject) => {
-    const stream = createWriteStream(dest);
-    if (!res.body) return reject(new Error("No body"));
-    const reader = res.body.getReader();
+  const fileStream = createWriteStream(dest);
+  const reader = res.body!.getReader();
+  let downloaded = 0;
 
+  await new Promise<void>((resolve, reject) => {
     const pump = async () => {
       try {
         while (true) {
           const { done, value } = await reader.read();
-          if (done) break;
-          stream.write(value);
+          if (done) { fileStream.end(); break; }
+          downloaded += value.length;
+          if (!fileStream.write(value)) {
+            await new Promise<void>(r => fileStream.once("drain", r));
+          }
+          if (downloaded % (50 * 1024 * 1024) < value.length) {
+            process.stdout.write(`  ${(downloaded / 1024 / 1024).toFixed(0)}MB downloaded...\r`);
+          }
         }
-        stream.end();
-        stream.on("finish", resolve);
-      } catch (err) {
-        reject(err);
-      }
+        fileStream.on("finish", resolve);
+        fileStream.on("error", reject);
+      } catch (err) { reject(err); }
     };
     pump();
   });
 
-  console.log(`Downloaded to ${dest}`);
+  console.log(`\nDownloaded to ${dest} (${(downloaded / 1024 / 1024).toFixed(0)}MB)`);
 }
 
 function mapScryfallCard(card: ScryfallCard) {
@@ -75,98 +74,6 @@ function mapScryfallCard(card: ScryfallCard) {
     loyalty: card.loyalty ?? null,
     keywords: card.keywords ?? [],
   };
-}
-
-async function* streamJsonArray(
-  filePath: string
-): AsyncGenerator<ScryfallCard> {
-  const rl = readline.createInterface({
-    input: createReadStream(filePath),
-    crlfDelay: Infinity,
-  });
-
-  let buffer = "";
-  let depth = 0;
-  let inString = false;
-  let escape = false;
-  let started = false;
-
-  for await (const chunk of rl) {
-    for (const char of chunk + "\n") {
-      if (escape) {
-        escape = false;
-        buffer += char;
-        continue;
-      }
-      if (char === "\\" && inString) {
-        escape = true;
-        buffer += char;
-        continue;
-      }
-      if (char === '"') inString = !inString;
-      if (!inString) {
-        if (char === "{") {
-          depth++;
-          started = true;
-        }
-        if (char === "}") depth--;
-      }
-      if (started) buffer += char;
-
-      if (started && depth === 0 && buffer.trim()) {
-        try {
-          const obj = JSON.parse(buffer.trim().replace(/^,/, ""));
-          yield obj as ScryfallCard;
-        } catch {
-          // skip malformed
-        }
-        buffer = "";
-        started = false;
-      }
-    }
-  }
-}
-
-async function importCards(
-  filePath: string,
-  withImages: boolean,
-  limit?: number
-) {
-  let batch: ReturnType<typeof mapScryfallCard>[] = [];
-  let count = 0;
-  let skipped = 0;
-
-  console.log("Starting card import...");
-
-  for await (const card of streamJsonArray(filePath)) {
-    if (limit && count >= limit) break;
-
-    // Skip tokens, emblems, and art cards
-    if (
-      card.type_line?.toLowerCase().includes("token") ||
-      card.type_line?.toLowerCase().includes("emblem") ||
-      card.set?.startsWith("t")
-    ) {
-      skipped++;
-      continue;
-    }
-
-    batch.push(mapScryfallCard(card));
-
-    if (batch.length >= BATCH_SIZE) {
-      await upsertBatch(batch, withImages);
-      count += batch.length;
-      console.log(`Imported ${count} cards...`);
-      batch = [];
-    }
-  }
-
-  if (batch.length > 0) {
-    await upsertBatch(batch, withImages);
-    count += batch.length;
-  }
-
-  console.log(`\nImport complete. ${count} cards imported, ${skipped} skipped.`);
 }
 
 async function upsertBatch(
@@ -210,34 +117,79 @@ async function upsertBatch(
           data: { imageUrl: s3Url },
         });
       } catch (err) {
-        console.error(`Failed to upload image for ${card.name}:`, err);
+        console.error(`  ⚠ Failed image for ${card.name}: ${err}`);
       }
     }
   }
 }
 
+async function importCards(filePath: string, withImages: boolean, limit?: number) {
+  console.log("Parsing JSON...");
+  const raw = readFileSync(filePath, "utf-8");
+  const allCards: ScryfallCard[] = JSON.parse(raw);
+  console.log(`Parsed ${allCards.length.toLocaleString()} total cards from Scryfall.`);
+
+  let batch: ReturnType<typeof mapScryfallCard>[] = [];
+  let count = 0;
+  let skipped = 0;
+
+  for (const card of allCards) {
+    if (limit && count >= limit) break;
+
+    // Skip tokens, emblems, art cards
+    if (
+      card.type_line?.toLowerCase().includes("token") ||
+      card.type_line?.toLowerCase().includes("emblem") ||
+      card.set?.startsWith("t")
+    ) {
+      skipped++;
+      continue;
+    }
+
+    batch.push(mapScryfallCard(card));
+
+    if (batch.length >= BATCH_SIZE) {
+      await upsertBatch(batch, withImages);
+      count += batch.length;
+      console.log(`  Imported ${count} cards...`);
+      batch = [];
+    }
+  }
+
+  if (batch.length > 0) {
+    await upsertBatch(batch, withImages);
+    count += batch.length;
+  }
+
+  console.log(`\nDone! ${count} cards imported, ${skipped} skipped.`);
+}
+
 async function main() {
   const args = process.argv.slice(2);
   const withImages = args.includes("--with-images");
+  const skipDownload = args.includes("--skip-download");
   const limitArg = args.find((a) => a.startsWith("--limit="));
   const limit = limitArg ? parseInt(limitArg.split("=")[1]) : undefined;
 
-  const tmpFile = path.join(os.tmpdir(), "scryfall-bulk.json");
+  const shouldCleanup = !skipDownload;
 
   try {
-    console.log("Fetching Scryfall bulk data info...");
-    const bulkData = await getBulkDataInfo();
-    const defaultCards = bulkData.find((b) => b.type === "default_cards");
-    if (!defaultCards) throw new Error("Could not find default_cards bulk data");
+    if (skipDownload && existsSync(TMP_FILE)) {
+      console.log(`Using existing file: ${TMP_FILE}`);
+    } else {
+      console.log("Fetching Scryfall bulk data info...");
+      const bulkData = await getBulkDataInfo();
+      const defaultCards = bulkData.find((b) => b.type === "default_cards");
+      if (!defaultCards) throw new Error("Could not find default_cards bulk data");
+      console.log(`Last updated: ${defaultCards.updated_at}`);
+      console.log(`File size: ${(defaultCards.size / 1024 / 1024).toFixed(0)}MB`);
+      await downloadFile(defaultCards.download_uri, TMP_FILE);
+    }
 
-    console.log(`Bulk data last updated: ${defaultCards.updated_at}`);
-    console.log(`File size: ${(defaultCards.size / 1024 / 1024).toFixed(0)}MB`);
-
-    await downloadFile(defaultCards.download_uri, tmpFile);
-    await importCards(tmpFile, withImages, limit);
+    await importCards(TMP_FILE, withImages, limit);
   } finally {
-    if (existsSync(tmpFile)) {
-      await unlink(tmpFile);
+    if (shouldCleanup && existsSync(TMP_FILE)) {
+      await unlink(TMP_FILE);
       console.log("Cleaned up temp file.");
     }
     await prisma.$disconnect();
