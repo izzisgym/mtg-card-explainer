@@ -4,6 +4,7 @@ import { useState, useCallback, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { CardGridItem } from "./CardGridItem";
 import { Pagination } from "./Pagination";
+import SetFilter from "./SetFilter";
 
 interface Card {
   id: string;
@@ -156,6 +157,11 @@ export default function CardBrowser({
                 <option key={o.value} value={o.value}>{o.label}</option>
               ))}
             </select>
+            <SetFilter
+              value={set}
+              onChange={(code) => handleFilterChange("set", code)}
+              inputStyle={inputStyle}
+            />
             <button
               type="submit"
               style={{
