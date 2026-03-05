@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "What does this Magic card do?",
@@ -12,24 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-screen" style={{ background: "var(--background)", color: "var(--foreground)" }}>
-        <header style={{ borderBottom: "3px solid var(--accent)", background: "var(--card-bg)" }}>
-          <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-3 group">
-              <span
-                className="text-sm font-bold px-2 py-1"
-                style={{ background: "var(--accent)", color: "#fff", letterSpacing: "0.05em" }}
-              >
-                WDC
-              </span>
-              <span className="text-lg font-bold uppercase tracking-widest">
-                What does this Magic card do?
-              </span>
-            </Link>
-          </div>
-        </header>
-
         <main className="max-w-7xl mx-auto px-4 py-8">{children}</main>
-
       </body>
     </html>
   );
