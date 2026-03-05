@@ -30,12 +30,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <main className="max-w-7xl mx-auto px-4 py-8">{children}</main>
 
-        <footer
-          className="mt-16 py-6 text-center text-xs uppercase tracking-widest"
-          style={{ borderTop: "2px solid var(--accent)", color: "var(--muted-fg)" }}
-        >
-          Magic: The Gathering is ™ &amp; © Wizards of the Coast.
-        </footer>
       </body>
     </html>
   );
