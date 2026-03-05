@@ -79,7 +79,7 @@ export default async function HomePage({
       {/* Hero */}
       <div className="mb-10 text-center">
         <h1 className="text-4xl sm:text-5xl font-bold mb-3" style={{ color: "var(--accent-light)" }}>
-          MTG Card Explainer
+          Magic Cards Explained
         </h1>
         <p className="text-lg max-w-xl mx-auto" style={{ color: "rgba(232,232,240,0.65)" }}>
           Search any Magic: The Gathering card and get a plain-English

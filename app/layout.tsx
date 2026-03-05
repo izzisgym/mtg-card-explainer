@@ -3,7 +3,7 @@ import "./globals.css";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "MTG Card Explainer",
+  title: "Magic Cards Explained",
   description:
     "Search Magic: The Gathering cards and get plain-English explanations powered by Claude AI.",
   icons: {
@@ -24,7 +24,7 @@ export default function RootLayout({
             <Link href="/" className="flex items-center gap-2 group">
               <span className="text-2xl">🃏</span>
               <span className="text-xl font-bold" style={{ color: "var(--accent-light)" }}>
-                MTG Explainer
+                Magic Cards Explained
               </span>
             </Link>
             <span className="text-sm" style={{ color: "rgba(232,232,240,0.5)" }}>
