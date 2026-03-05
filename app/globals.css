@@ -43,3 +43,10 @@ input, select, button, textarea {
   transform: translate(-3px, -3px);
   box-shadow: 4px 4px 0px #000;
 }
+
+.version-thumb {
+  transition: transform 0.1s ease;
+}
+.version-thumb:hover {
+  transform: translate(-2px, -2px);
+}

@@ -206,10 +206,8 @@ export default async function CardDetailPage({ params }: Props) {
               <Link
                 key={v.id}
                 href={`/cards/${v.id}`}
-                className="flex flex-col items-center gap-1 p-2"
-                style={{ border: "2px solid #000", width: "90px", background: "#fff", transition: "transform 0.1s" }}
-                onMouseEnter={(e) => (e.currentTarget.style.transform = "translate(-2px,-2px)")}
-                onMouseLeave={(e) => (e.currentTarget.style.transform = "")}
+                className="version-thumb flex flex-col items-center gap-1 p-2"
+                style={{ border: "2px solid #000", width: "90px", background: "#fff" }}
               >
                 {v.imageUrl ? (
                   <div className="relative w-full overflow-hidden" style={{ aspectRatio: "5/7" }}>
