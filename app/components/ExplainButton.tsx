@@ -7,13 +7,8 @@ interface ExplainButtonProps {
   initialExplanation?: string | null;
 }
 
-export default function ExplainButton({
-  cardId,
-  initialExplanation,
-}: ExplainButtonProps) {
-  const [explanation, setExplanation] = useState<string | null>(
-    initialExplanation ?? null
-  );
+export default function ExplainButton({ cardId, initialExplanation }: ExplainButtonProps) {
+  const [explanation, setExplanation] = useState<string | null>(initialExplanation ?? null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,9 +16,7 @@ export default function ExplainButton({
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/cards/${cardId}/explain`, {
-        method: "POST",
-      });
+      const res = await fetch(`/api/cards/${cardId}/explain`, { method: "POST" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Failed to get explanation");
       setExplanation(data.explanation);
@@ -36,22 +29,20 @@ export default function ExplainButton({
 
   if (explanation) {
     return (
-      <div
-        className="rounded-xl p-5"
-        style={{
-          background: "rgba(124, 58, 237, 0.1)",
-          border: "1px solid rgba(124, 58, 237, 0.3)",
-        }}
-      >
-        <div className="flex items-center gap-2 mb-3">
-          <span
-            className="text-xs font-semibold uppercase tracking-wide px-2 py-1 rounded-md"
-            style={{ background: "var(--accent)", color: "white" }}
-          >
-            AI Explanation
-          </span>
-        </div>
-        <p className="text-base leading-relaxed">{explanation}</p>
+      <div style={{ border: "2px solid var(--accent)", padding: "16px" }}>
+        <p
+          className="text-xs font-bold uppercase tracking-widest mb-3"
+          style={{
+            color: "#fff",
+            background: "var(--accent)",
+            display: "inline-block",
+            padding: "2px 8px",
+            marginBottom: "10px",
+          }}
+        >
+          AI Explanation
+        </p>
+        <p className="text-sm leading-relaxed">{explanation}</p>
       </div>
     );
   }
@@ -59,25 +50,32 @@ export default function ExplainButton({
   return (
     <div>
       {error && (
-        <p className="text-red-400 text-sm mb-3">Error: {error}</p>
+        <p
+          className="text-xs uppercase tracking-wide mb-3 p-2"
+          style={{ color: "#ff4444", border: "2px solid #ff4444" }}
+        >
+          ERROR: {error}
+        </p>
       )}
       <button
         onClick={handleExplain}
         disabled={loading}
-        className="w-full py-3 px-6 rounded-xl font-semibold text-white transition-all hover:opacity-90 disabled:opacity-60 flex items-center justify-center gap-2"
-        style={{ background: "var(--accent)" }}
+        style={{
+          width: "100%",
+          padding: "14px",
+          background: loading ? "var(--muted)" : "var(--accent)",
+          color: "#fff",
+          border: "2px solid var(--accent)",
+          fontSize: "13px",
+          fontWeight: "bold",
+          letterSpacing: "0.15em",
+          textTransform: "uppercase",
+          cursor: loading ? "not-allowed" : "pointer",
+          fontFamily: "inherit",
+          opacity: loading ? 0.7 : 1,
+        }}
       >
-        {loading ? (
-          <>
-            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
-            </svg>
-            Thinking...
-          </>
-        ) : (
-          <>✨ Explain this card</>
-        )}
+        {loading ? "THINKING..." : "EXPLAIN THIS CARD"}
       </button>
     </div>
   );

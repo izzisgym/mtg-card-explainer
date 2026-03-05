@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useTransition } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { CardGridItem } from "./CardGridItem";
 import { Pagination } from "./Pagination";
 
@@ -29,24 +29,24 @@ interface CardBrowserProps {
 }
 
 const COLOR_OPTIONS = [
-  { value: "", label: "All Colors" },
-  { value: "W", label: "⚪ White" },
-  { value: "U", label: "🔵 Blue" },
-  { value: "B", label: "⚫ Black" },
-  { value: "R", label: "🔴 Red" },
-  { value: "G", label: "🟢 Green" },
+  { value: "", label: "ALL COLORS" },
+  { value: "W", label: "WHITE" },
+  { value: "U", label: "BLUE" },
+  { value: "B", label: "BLACK" },
+  { value: "R", label: "RED" },
+  { value: "G", label: "GREEN" },
 ];
 
 const TYPE_OPTIONS = [
-  { value: "", label: "All Types" },
-  { value: "Creature", label: "Creature" },
-  { value: "Instant", label: "Instant" },
-  { value: "Sorcery", label: "Sorcery" },
-  { value: "Enchantment", label: "Enchantment" },
-  { value: "Artifact", label: "Artifact" },
-  { value: "Planeswalker", label: "Planeswalker" },
-  { value: "Land", label: "Land" },
-  { value: "Battle", label: "Battle" },
+  { value: "", label: "ALL TYPES" },
+  { value: "Creature", label: "CREATURE" },
+  { value: "Instant", label: "INSTANT" },
+  { value: "Sorcery", label: "SORCERY" },
+  { value: "Enchantment", label: "ENCHANTMENT" },
+  { value: "Artifact", label: "ARTIFACT" },
+  { value: "Planeswalker", label: "PLANESWALKER" },
+  { value: "Land", label: "LAND" },
+  { value: "Battle", label: "BATTLE" },
 ];
 
 export default function CardBrowser({
@@ -75,13 +75,11 @@ export default function CardBrowser({
       const t = overrides.type !== undefined ? String(overrides.type) : type;
       const s = overrides.set !== undefined ? String(overrides.set) : set;
       const p = overrides.page !== undefined ? String(overrides.page) : "1";
-
       if (q) params.set("q", q);
       if (c) params.set("color", c);
       if (t) params.set("type", t);
       if (s) params.set("set", s);
       if (p !== "1") params.set("page", p);
-
       const qs = params.toString();
       return `/${qs ? `?${qs}` : ""}`;
     },
@@ -101,9 +99,7 @@ export default function CardBrowser({
       if (key === "color") setColor(value);
       if (key === "type") setType(value);
       if (key === "set") setSet(value);
-      startTransition(() =>
-        router.push(buildUrl({ [key]: value, page: 1 }))
-      );
+      startTransition(() => router.push(buildUrl({ [key]: value, page: 1 })));
     },
     [buildUrl, router]
   );
@@ -116,115 +112,109 @@ export default function CardBrowser({
     [buildUrl, router]
   );
 
+  const inputStyle = {
+    background: "var(--card-bg)",
+    border: "2px solid var(--accent)",
+    color: "var(--foreground)",
+    outline: "none",
+    padding: "10px 14px",
+    fontSize: "13px",
+    letterSpacing: "0.05em",
+    width: "100%",
+  };
+
   return (
     <div>
-      {/* Search & Filter Bar */}
-      <form onSubmit={handleSearch} className="mb-8">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-3">
-          {/* Search input */}
+      {/* Search bar */}
+      <form onSubmit={handleSearch} className="mb-6">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <div className="flex-1">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search cards by name..."
-              className="w-full px-4 py-3 rounded-xl text-base outline-none transition-colors"
-              style={{
-                background: "var(--card-bg)",
-                border: "1px solid var(--card-border)",
-                color: "var(--foreground)",
-              }}
+              placeholder="SEARCH CARDS..."
+              style={inputStyle}
             />
           </div>
-
-          {/* Filters */}
-          <div className="flex gap-2 flex-wrap sm:flex-nowrap">
+          <div className="flex gap-2 flex-wrap">
             <select
               value={color}
               onChange={(e) => handleFilterChange("color", e.target.value)}
-              className="px-3 py-3 rounded-xl text-sm outline-none cursor-pointer"
-              style={{
-                background: "var(--card-bg)",
-                border: "1px solid var(--card-border)",
-                color: "var(--foreground)",
-              }}
+              style={{ ...inputStyle, width: "auto", cursor: "pointer" }}
             >
               {COLOR_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
+                <option key={o.value} value={o.value}>{o.label}</option>
               ))}
             </select>
-
             <select
               value={type}
               onChange={(e) => handleFilterChange("type", e.target.value)}
-              className="px-3 py-3 rounded-xl text-sm outline-none cursor-pointer"
-              style={{
-                background: "var(--card-bg)",
-                border: "1px solid var(--card-border)",
-                color: "var(--foreground)",
-              }}
+              style={{ ...inputStyle, width: "auto", cursor: "pointer" }}
             >
               {TYPE_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label}
-                </option>
+                <option key={o.value} value={o.value}>{o.label}</option>
               ))}
             </select>
-
             <button
               type="submit"
-              className="px-6 py-3 rounded-xl font-semibold text-white text-sm transition-opacity hover:opacity-90"
-              style={{ background: "var(--accent)" }}
+              style={{
+                background: "var(--accent)",
+                color: "#fff",
+                border: "2px solid var(--accent)",
+                padding: "10px 24px",
+                fontWeight: "bold",
+                fontSize: "13px",
+                letterSpacing: "0.1em",
+                cursor: "pointer",
+              }}
             >
-              Search
+              SEARCH
             </button>
           </div>
         </div>
       </form>
 
-      {/* Results info */}
+      {/* Count */}
       {initialTotal > 0 && (
-        <p className="text-sm mb-4" style={{ color: "rgba(232,232,240,0.5)" }}>
-          {initialTotal.toLocaleString()} card{initialTotal !== 1 ? "s" : ""}
-          {initialQuery && ` matching "${initialQuery}"`}
+        <p
+          className="text-xs uppercase tracking-widest mb-4"
+          style={{ color: "var(--muted-fg)", borderLeft: "3px solid var(--accent)", paddingLeft: "8px" }}
+        >
+          {initialTotal.toLocaleString()} {initialTotal === 1 ? "card" : "cards"}
+          {initialQuery && ` — "${initialQuery}"`}
         </p>
       )}
 
-      {/* Loading overlay */}
+      {/* Loading */}
       {isPending && (
         <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
           <div
-            className="px-6 py-3 rounded-xl text-sm font-medium"
-            style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+            className="px-6 py-3 text-sm font-bold uppercase tracking-widest"
+            style={{ background: "var(--accent)", color: "#fff", border: "2px solid #fff" }}
           >
-            Loading...
+            LOADING...
           </div>
         </div>
       )}
 
-      {/* Card Grid */}
+      {/* Grid */}
       {initialCards.length > 0 ? (
         <>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
             {initialCards.map((card) => (
               <CardGridItem key={card.id} {...card} />
             ))}
           </div>
-          <Pagination
-            page={initialPage}
-            totalPages={initialTotalPages}
-            onPageChange={handlePageChange}
-          />
+          <Pagination page={initialPage} totalPages={initialTotalPages} onPageChange={handlePageChange} />
         </>
       ) : (
-        <div className="text-center py-24">
-          <div className="text-6xl mb-4">🔍</div>
-          <h2 className="text-xl font-semibold mb-2">No cards found</h2>
-          <p style={{ color: "rgba(232,232,240,0.5)" }}>
-            Try a different search term or adjust your filters.
-          </p>
+        <div
+          className="py-20 text-center"
+          style={{ border: "2px solid var(--accent)" }}
+        >
+          <p className="text-3xl font-bold mb-2" style={{ color: "var(--accent)" }}>—</p>
+          <p className="text-sm uppercase tracking-widest" style={{ color: "var(--muted-fg)" }}>No cards found</p>
         </div>
       )}
     </div>

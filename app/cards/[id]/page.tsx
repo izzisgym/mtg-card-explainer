@@ -11,27 +11,15 @@ interface Props {
 }
 
 const COLOR_NAMES: Record<string, string> = {
-  W: "White",
-  U: "Blue",
-  B: "Black",
-  R: "Red",
-  G: "Green",
+  W: "WHITE", U: "BLUE", B: "BLACK", R: "RED", G: "GREEN",
 };
 
-const COLOR_STYLES: Record<string, { bg: string; text: string }> = {
-  W: { bg: "rgba(249,228,183,0.15)", text: "#f9e4b7" },
-  U: { bg: "rgba(170,224,250,0.15)", text: "#aae0fa" },
-  B: { bg: "rgba(203,194,191,0.15)", text: "#cbc2bf" },
-  R: { bg: "rgba(249,170,143,0.15)", text: "#f9aa8f" },
-  G: { bg: "rgba(155,211,174,0.15)", text: "#9bd3ae" },
-};
-
-const RARITY_STYLES: Record<string, string> = {
-  common: "#9ca3af",
-  uncommon: "#cbd5e1",
-  rare: "#fbbf24",
-  mythic: "#f97316",
-  special: "#a78bfa",
+const RARITY_COLORS: Record<string, string> = {
+  common: "#aaaaaa",
+  uncommon: "#c0c8d8",
+  rare: "#f0c040",
+  mythic: "#f07830",
+  special: "#a060e0",
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -57,15 +45,12 @@ export default async function CardDetailPage({ params }: Props) {
     card = await prisma.card.findUnique({ where: { id } });
   } catch {}
 
-  // If not in DB, fetch from Scryfall and cache
   if (!card) {
     try {
       const scryfallCard = await getCardById(id);
       if (!scryfallCard) notFound();
-
       const imageUrl = getCardImageUrl(scryfallCard) ?? null;
       const oracleText = getCardOracleText(scryfallCard);
-
       card = await prisma.card.upsert({
         where: { id: scryfallCard.id },
         update: {},
@@ -94,7 +79,6 @@ export default async function CardDetailPage({ params }: Props) {
 
   if (!card) notFound();
 
-  // Fetch other printings of the same card name
   let otherVersions: { id: string; setName: string | null; setCode: string; rarity: string | null; imageUrl: string | null }[] = [];
   try {
     otherVersions = await prisma.card.findMany({
@@ -104,23 +88,26 @@ export default async function CardDetailPage({ params }: Props) {
     });
   } catch {}
 
-  const rarityColor = card.rarity ? RARITY_STYLES[card.rarity] ?? "#9ca3af" : "#9ca3af";
+  const rarityColor = card.rarity ? RARITY_COLORS[card.rarity] ?? "#aaaaaa" : "#aaaaaa";
 
   return (
     <div>
-      {/* Back link */}
+      {/* Back */}
       <Link
         href="/"
-        className="inline-flex items-center gap-1 text-sm mb-6 hover:opacity-80 transition-opacity"
-        style={{ color: "var(--accent-light)" }}
+        className="inline-block text-xs font-bold uppercase tracking-widest mb-6"
+        style={{ color: "var(--accent-light)", borderBottom: "2px solid var(--accent)" }}
       >
-        ← Back to search
+        ← BACK
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-4xl items-start">
-        {/* Card Image */}
-        <div className="flex justify-center md:justify-start md:sticky md:top-8">
-          <div className="relative w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl" style={{ aspectRatio: "5/7" }}>
+        {/* Image */}
+        <div className="md:sticky md:top-8">
+          <div
+            className="relative w-full max-w-sm overflow-hidden"
+            style={{ aspectRatio: "5/7", border: "3px solid var(--accent)" }}
+          >
             {card.imageUrl ? (
               <Image
                 src={card.imageUrl}
@@ -132,54 +119,39 @@ export default async function CardDetailPage({ params }: Props) {
                 sizes="(max-width: 768px) 90vw, 400px"
               />
             ) : (
-              <div
-                className="w-full h-full flex flex-col items-center justify-center gap-3"
-                style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
-              >
-                <span className="text-6xl opacity-30">🃏</span>
-                <span className="text-sm opacity-40">No image available</span>
+              <div className="w-full h-full flex items-center justify-center" style={{ background: "#111" }}>
+                <span className="font-bold text-4xl" style={{ color: "var(--accent)" }}>?</span>
               </div>
             )}
           </div>
         </div>
 
-        {/* Card Details */}
+        {/* Details */}
         <div className="flex flex-col gap-4">
-          <div>
-            <div className="flex items-center gap-3 flex-wrap mb-1">
-              <h1 className="text-3xl font-bold">{card.name}</h1>
+          {/* Name + rarity */}
+          <div style={{ borderBottom: "3px solid var(--accent)", paddingBottom: "12px" }}>
+            <h1 className="text-2xl font-bold uppercase tracking-wide">{card.name}</h1>
+            <div className="flex items-center gap-3 mt-1 flex-wrap">
+              <span className="text-sm uppercase tracking-wide" style={{ color: "var(--muted-fg)" }}>
+                {card.typeLine}
+              </span>
               {card.rarity && (
                 <span
-                  className="text-xs font-semibold capitalize px-2.5 py-1 rounded-full"
-                  style={{
-                    background: `${rarityColor}20`,
-                    color: rarityColor,
-                    border: `1px solid ${rarityColor}40`,
-                  }}
+                  className="text-xs font-bold uppercase px-2 py-0.5"
+                  style={{ background: "#111", color: rarityColor, border: `2px solid ${rarityColor}` }}
                 >
                   {card.rarity}
                 </span>
               )}
             </div>
-            <p className="text-base" style={{ color: "rgba(232,232,240,0.6)" }}>
-              {card.typeLine}
-            </p>
           </div>
 
-          {/* Stats row */}
-          <div className="flex flex-wrap gap-3">
-            {card.manaCost && (
-              <StatBadge label="Mana Cost" value={card.manaCost} />
-            )}
-            {card.power && card.toughness && (
-              <StatBadge label="P/T" value={`${card.power}/${card.toughness}`} />
-            )}
-            {card.loyalty && (
-              <StatBadge label="Loyalty" value={card.loyalty} />
-            )}
-            {card.setName && (
-              <StatBadge label="Set" value={`${card.setName} (${card.setCode.toUpperCase()})`} />
-            )}
+          {/* Stats */}
+          <div className="flex flex-wrap gap-2">
+            {card.manaCost && <StatBadge label="MANA" value={card.manaCost.replace(/[{}]/g, "")} />}
+            {card.power && card.toughness && <StatBadge label="P/T" value={`${card.power}/${card.toughness}`} />}
+            {card.loyalty && <StatBadge label="LOYALTY" value={card.loyalty} />}
+            {card.setName && <StatBadge label="SET" value={`${card.setName} — ${card.setCode.toUpperCase()}`} />}
           </div>
 
           {/* Colors */}
@@ -188,12 +160,8 @@ export default async function CardDetailPage({ params }: Props) {
               {card.colors.map((c) => (
                 <span
                   key={c}
-                  className="text-xs px-2.5 py-1 rounded-full font-medium"
-                  style={{
-                    background: COLOR_STYLES[c]?.bg ?? "rgba(255,255,255,0.1)",
-                    color: COLOR_STYLES[c]?.text ?? "white",
-                    border: `1px solid ${COLOR_STYLES[c]?.text ?? "white"}30`,
-                  }}
+                  className="text-xs font-bold px-2 py-1 uppercase tracking-widest"
+                  style={{ border: "2px solid var(--accent)", color: "var(--foreground)" }}
                 >
                   {COLOR_NAMES[c] ?? c}
                 </span>
@@ -207,12 +175,8 @@ export default async function CardDetailPage({ params }: Props) {
               {card.keywords.map((kw) => (
                 <span
                   key={kw}
-                  className="text-xs px-2 py-1 rounded font-medium"
-                  style={{
-                    background: "rgba(124,58,237,0.15)",
-                    color: "var(--accent-light)",
-                    border: "1px solid rgba(124,58,237,0.3)",
-                  }}
+                  className="text-xs font-bold px-2 py-1 uppercase tracking-wide"
+                  style={{ background: "var(--accent)", color: "#fff" }}
                 >
                   {kw}
                 </span>
@@ -220,57 +184,64 @@ export default async function CardDetailPage({ params }: Props) {
             </div>
           )}
 
-          {/* Oracle Text */}
+          {/* Card text */}
           {card.oracleText && (
-            <div
-              className="rounded-xl p-4"
-              style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
-            >
-              <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: "rgba(232,232,240,0.4)" }}>
+            <div style={{ border: "2px solid var(--muted)", padding: "12px" }}>
+              <p
+                className="text-xs font-bold uppercase tracking-widest mb-2"
+                style={{ color: "var(--muted-fg)" }}
+              >
                 Card Text
               </p>
               <p className="text-sm leading-relaxed whitespace-pre-wrap">{card.oracleText}</p>
             </div>
           )}
 
-          {/* AI Explanation */}
-          <div>
-            <ExplainButton cardId={card.id} initialExplanation={card.explanation} />
-          </div>
+          {/* Explain */}
+          <ExplainButton cardId={card.id} initialExplanation={card.explanation} />
         </div>
       </div>
 
       {/* Other Versions */}
       {otherVersions.length > 0 && (
         <div className="mt-12 max-w-4xl">
-          <h2 className="text-lg font-semibold mb-4" style={{ color: "rgba(232,232,240,0.7)" }}>
-            Other Versions
+          <h2
+            className="text-sm font-bold uppercase tracking-widest mb-4"
+            style={{ borderLeft: "4px solid var(--accent)", paddingLeft: "10px" }}
+          >
+            Other Versions ({otherVersions.length})
           </h2>
           <div className="flex flex-wrap gap-3">
             {otherVersions.map((v) => (
               <Link
                 key={v.id}
                 href={`/cards/${v.id}`}
-                className="flex flex-col items-center gap-2 p-3 rounded-xl transition-all hover:scale-105"
-                style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", width: "100px" }}
+                className="flex flex-col items-center gap-1 p-2 transition-all hover:scale-105"
+                style={{ border: "2px solid var(--accent)", width: "90px", background: "var(--card-bg)" }}
               >
                 {v.imageUrl ? (
-                  <div className="relative w-full rounded-lg overflow-hidden" style={{ aspectRatio: "5/7" }}>
+                  <div className="relative w-full overflow-hidden" style={{ aspectRatio: "5/7" }}>
                     <Image
                       src={v.imageUrl}
-                      alt={`${v.setName ?? v.setCode} printing`}
+                      alt={v.setCode}
                       fill
                       className="object-contain"
                       unoptimized
-                      sizes="100px"
+                      sizes="90px"
                     />
                   </div>
                 ) : (
-                  <div className="w-full rounded-lg flex items-center justify-center" style={{ aspectRatio: "5/7", background: "var(--card-border)" }}>
-                    <span className="text-2xl opacity-30">🃏</span>
+                  <div
+                    className="w-full flex items-center justify-center font-bold"
+                    style={{ aspectRatio: "5/7", background: "#1a1a1a", color: "var(--accent)" }}
+                  >
+                    ?
                   </div>
                 )}
-                <span className="text-xs text-center font-medium uppercase tracking-wide" style={{ color: "rgba(232,232,240,0.5)" }}>
+                <span
+                  className="text-xs font-bold uppercase tracking-wide text-center"
+                  style={{ color: "var(--accent-light)" }}
+                >
                   {v.setCode.toUpperCase()}
                 </span>
               </Link>
@@ -285,11 +256,11 @@ export default async function CardDetailPage({ params }: Props) {
 function StatBadge({ label, value }: { label: string; value: string }) {
   return (
     <div
-      className="px-3 py-1.5 rounded-lg text-sm"
-      style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)" }}
+      className="text-xs px-2 py-1"
+      style={{ border: "2px solid var(--accent)", background: "var(--card-bg)" }}
     >
-      <span className="text-xs opacity-50 mr-1">{label}:</span>
-      <span className="font-medium">{value}</span>
+      <span className="font-bold uppercase tracking-wide" style={{ color: "var(--muted-fg)" }}>{label}: </span>
+      <span className="font-bold">{value}</span>
     </div>
   );
 }

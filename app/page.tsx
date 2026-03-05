@@ -11,11 +11,7 @@ interface SearchParams {
   page?: string;
 }
 
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) {
+export default async function HomePage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const sp = await searchParams;
   const q = sp.q ?? "";
   const color = sp.color ?? "";
@@ -69,15 +65,15 @@ export default async function HomePage({
       prisma.card.count({ where }),
     ]);
   } catch {
-    // DB not available yet (local dev without DB)
+    // DB not available yet
   }
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   return (
     <div>
-      <div className="mb-10 text-center">
-        <h1 className="text-4xl sm:text-5xl font-bold mb-3" style={{ color: "var(--accent-light)" }}>
+      <div className="mb-8 pb-4" style={{ borderBottom: "2px solid var(--accent)" }}>
+        <h1 className="text-3xl sm:text-4xl font-bold uppercase tracking-widest brutalist-title">
           Magic Cards Explained
         </h1>
       </div>
