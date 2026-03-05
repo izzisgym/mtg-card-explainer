@@ -52,13 +52,6 @@ export default function ExplainButton({
           </span>
         </div>
         <p className="text-base leading-relaxed">{explanation}</p>
-        <button
-          onClick={handleExplain}
-          disabled={loading}
-          className="mt-3 text-xs underline opacity-40 hover:opacity-70 transition-opacity"
-        >
-          Regenerate
-        </button>
       </div>
     );
   }

@@ -35,7 +35,7 @@ export async function explainCard(card: CardForExplanation): Promise<string> {
     messages: [
       {
         role: "user",
-        content: `You are a helpful Magic: The Gathering expert. Explain what the following card does in plain English for someone new to the game. Be concise (2-4 sentences). Focus on what the card actually does mechanically, not flavor. Avoid jargon where possible, but briefly explain any key terms.
+        content: `You are a helpful Magic: The Gathering expert. Explain what the following card does in plain English for someone new to the game. Be concise (2-4 sentences). Focus on what the card actually does mechanically, not flavor. Avoid jargon where possible, but briefly explain any key terms. Do NOT start your response by restating the card's name.
 
 ${cardDetails}`,
       },
