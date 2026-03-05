@@ -83,7 +83,7 @@ export default async function HomePage({
         </h1>
         <p className="text-lg max-w-xl mx-auto" style={{ color: "rgba(232,232,240,0.65)" }}>
           Search any Magic: The Gathering card and get a plain-English
-          explanation of what it does — powered by Claude AI.
+          explanation of what it does — powered by AI.
         </p>
       </div>
 

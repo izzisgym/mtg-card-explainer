@@ -48,10 +48,7 @@ export default function ExplainButton({
             className="text-xs font-semibold uppercase tracking-wide px-2 py-1 rounded-md"
             style={{ background: "var(--accent)", color: "white" }}
           >
-            Claude AI
-          </span>
-          <span className="text-xs" style={{ color: "rgba(232,232,240,0.4)" }}>
-            Plain-English Explanation
+            AI Explanation
           </span>
         </div>
         <p className="text-base leading-relaxed">{explanation}</p>
@@ -83,7 +80,7 @@ export default function ExplainButton({
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
             </svg>
-            Asking Claude...
+            Thinking...
           </>
         ) : (
           <>✨ Explain this card</>

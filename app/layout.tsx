@@ -5,7 +5,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Magic Cards Explained",
   description:
-    "Search Magic: The Gathering cards and get plain-English explanations powered by Claude AI.",
+    "Search Magic: The Gathering cards and get plain-English explanations powered by AI.",
   icons: {
     icon: "/favicon.ico",
   },
@@ -35,17 +35,6 @@ export default function RootLayout({
         <main className="max-w-7xl mx-auto px-4 py-8">{children}</main>
         <footer className="border-t mt-16 py-8 text-center text-sm" style={{ borderColor: "var(--card-border)", color: "rgba(232,232,240,0.4)" }}>
           <p>
-            Card data provided by{" "}
-            <a href="https://scryfall.com" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-80">
-              Scryfall
-            </a>
-            . Explanations powered by{" "}
-            <a href="https://anthropic.com" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-80">
-              Claude
-            </a>
-            .
-          </p>
-          <p className="mt-1">
             Magic: The Gathering is ™ &amp; © Wizards of the Coast.
           </p>
         </footer>

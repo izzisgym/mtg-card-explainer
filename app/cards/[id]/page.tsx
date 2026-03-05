@@ -40,12 +40,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const card = await prisma.card.findUnique({ where: { id } });
     if (card) {
       return {
-        title: `${card.name} | MTG Explainer`,
+        title: `${card.name} | Magic Cards Explained`,
         description: card.oracleText?.slice(0, 160) ?? `Learn what ${card.name} does in plain English.`,
       };
     }
   } catch {}
-  return { title: "Card | MTG Explainer" };
+  return { title: "Card | Magic Cards Explained" };
 }
 
 export default async function CardDetailPage({ params }: Props) {
@@ -223,21 +223,10 @@ export default async function CardDetailPage({ params }: Props) {
             </div>
           )}
 
-          {/* Claude Explanation */}
+          {/* AI Explanation */}
           <div>
             <ExplainButton cardId={card.id} initialExplanation={card.explanation} />
           </div>
-
-          {/* Scryfall link */}
-          <a
-            href={card.scryfallUri}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm hover:opacity-80 transition-opacity inline-flex items-center gap-1"
-            style={{ color: "rgba(232,232,240,0.4)" }}
-          >
-            View on Scryfall ↗
-          </a>
         </div>
       </div>
     </div>
