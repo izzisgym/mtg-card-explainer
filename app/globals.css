@@ -1,15 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f5f0fa;
-  --foreground: #1a1a2e;
+  --background: #ffffff;
+  --foreground: #000000;
   --card-bg: #ffffff;
-  --card-border: #592c80;
-  --accent: #592c80;
-  --accent-light: #8b47c4;
+  --card-border: #000000;
+  --accent: #000000;
+  --accent-light: #333333;
   --accent-fg: #ffffff;
-  --muted: #d0c0e8;
-  --muted-fg: #6b5a80;
+  --muted: #e5e5e5;
+  --muted-fg: #666666;
+  --highlight: #592c80;
 }
 
 @theme inline {
@@ -24,32 +25,21 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Courier New", Courier, monospace;
-  font-size: 18px;
-  line-height: 1.7;
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
-/* Brutalist hover — shift instead of float */
+input, select, button, textarea {
+  font-family: inherit;
+}
+
 .card-hover {
-  transition: transform 0.1s ease, border-color 0.1s ease;
-  border: 2px solid var(--card-border) !important;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  border: 2px solid #000 !important;
 }
 
 .card-hover:hover {
   transform: translate(-3px, -3px);
-  box-shadow: 4px 4px 0px var(--accent);
-  border-color: var(--accent-light) !important;
-}
-
-input, select, button, textarea {
-  font-family: "Courier New", Courier, monospace;
-}
-
-/* Thick accent line under headings */
-.brutalist-title::after {
-  content: "";
-  display: block;
-  height: 4px;
-  background: var(--accent);
-  margin-top: 8px;
+  box-shadow: 4px 4px 0px #000;
 }

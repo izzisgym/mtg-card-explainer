@@ -14,25 +14,20 @@ interface CardGridItemProps {
   imageUrl?: string | null;
 }
 
-const RARITY_COLORS: Record<string, string> = {
-  common: "#aaaaaa",
-  uncommon: "#c0c8d8",
-  rare: "#f0c040",
-  mythic: "#f07830",
-  special: "#a060e0",
+const RARITY_LABEL: Record<string, string> = {
+  common: "C",
+  uncommon: "U",
+  rare: "R",
+  mythic: "M",
+  special: "S",
 };
 
-export function CardGridItem({ id, name, typeLine, manaCost, colors, setCode, rarity, imageUrl }: CardGridItemProps) {
-  const rarityColor = rarity ? RARITY_COLORS[rarity] ?? "#aaaaaa" : "#aaaaaa";
-
+export function CardGridItem({ id, name, typeLine, manaCost, setCode, rarity, imageUrl }: CardGridItemProps) {
   return (
     <Link href={`/cards/${id}`} className="block">
-      <div
-        className="card-hover overflow-hidden cursor-pointer h-full"
-        style={{ background: "var(--card-bg)" }}
-      >
+      <div className="card-hover overflow-hidden cursor-pointer h-full" style={{ background: "#fff" }}>
         {/* Image */}
-        <div className="relative aspect-[5/7] overflow-hidden" style={{ background: "#1a1a1a" }}>
+        <div className="relative aspect-[5/7] overflow-hidden" style={{ background: "#f0f0f0" }}>
           {imageUrl ? (
             <Image
               src={imageUrl}
@@ -44,33 +39,33 @@ export function CardGridItem({ id, name, typeLine, manaCost, colors, setCode, ra
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <span className="text-3xl opacity-20 font-mono">?</span>
+              <span className="text-3xl font-black opacity-20">?</span>
             </div>
           )}
           {rarity && (
             <span
-              className="absolute top-0 right-0 text-xs font-bold uppercase px-1.5 py-0.5"
-              style={{ background: "#000", color: rarityColor, letterSpacing: "0.08em" }}
+              className="absolute top-0 right-0 text-xs font-black px-1.5 py-0.5"
+              style={{ background: "#000", color: "#fff", letterSpacing: "0.08em" }}
             >
-              {rarity[0]}
+              {RARITY_LABEL[rarity] ?? rarity[0].toUpperCase()}
             </span>
           )}
         </div>
 
         {/* Info */}
-        <div className="p-3" style={{ borderTop: "2px solid var(--accent)" }}>
-          <h3 className="font-bold text-base uppercase tracking-wide leading-tight truncate mb-1" title={name}>
+        <div className="p-3" style={{ borderTop: "2px solid #000" }}>
+          <h3 className="font-black text-sm uppercase tracking-tight leading-tight truncate mb-1" title={name}>
             {name}
           </h3>
-          <p className="text-sm truncate" style={{ color: "var(--muted-fg)" }}>
+          <p className="text-xs truncate" style={{ color: "#666" }}>
             {typeLine}
           </p>
           <div className="flex items-center justify-between mt-2">
-            <span className="text-base uppercase font-bold" style={{ color: "var(--accent-light)" }}>
-              {setCode}
+            <span className="text-xs uppercase font-bold" style={{ color: "#666" }}>
+              {setCode.toUpperCase()}
             </span>
             {manaCost && (
-              <span className="text-base" style={{ color: "var(--muted-fg)" }}>
+              <span className="text-xs font-bold" style={{ color: "#000" }}>
                 {manaCost.replace(/[{}]/g, "")}
               </span>
             )}

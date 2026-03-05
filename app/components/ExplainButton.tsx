@@ -42,31 +42,25 @@ export default function ExplainButton({ cardId, initialExplanation }: ExplainBut
   if (explanation) {
     const parsed = parseExplanation(explanation);
     return (
-      <div style={{ border: "2px solid var(--accent)" }}>
+      <div style={{ border: "2px solid #000" }}>
         {parsed ? (
           <>
-            <div style={{ padding: "20px 24px", borderBottom: "2px solid var(--accent)" }}>
-              <p
-                className="text-sm font-bold uppercase tracking-widest mb-3"
-                style={{ color: "var(--accent-light)" }}
-              >
+            <div style={{ padding: "20px 24px", borderBottom: "2px solid #000" }}>
+              <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "#666" }}>
                 What it does
               </p>
-              <p className="text-lg leading-relaxed">{parsed.whatItDoes}</p>
+              <p className="text-base leading-relaxed">{parsed.whatItDoes}</p>
             </div>
             <div style={{ padding: "20px 24px" }}>
-              <p
-                className="text-sm font-bold uppercase tracking-widest mb-3"
-                style={{ color: "var(--accent-light)" }}
-              >
+              <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "#666" }}>
                 Why you&apos;d play it
               </p>
-              <p className="text-lg leading-relaxed">{parsed.whyPlay}</p>
+              <p className="text-base leading-relaxed">{parsed.whyPlay}</p>
             </div>
           </>
         ) : (
           <div style={{ padding: "20px 24px" }}>
-            <p className="text-lg leading-relaxed whitespace-pre-wrap">{explanation}</p>
+            <p className="text-base leading-relaxed whitespace-pre-wrap">{explanation}</p>
           </div>
         )}
       </div>
@@ -77,8 +71,8 @@ export default function ExplainButton({ cardId, initialExplanation }: ExplainBut
     <div>
       {error && (
         <p
-          className="text-base uppercase tracking-wide mb-3 p-3"
-          style={{ color: "#ff4444", border: "2px solid #ff4444" }}
+          className="text-sm font-black uppercase tracking-wide mb-3 p-3"
+          style={{ color: "#000", border: "2px solid #000", background: "#fff" }}
         >
           ERROR: {error}
         </p>
@@ -89,16 +83,15 @@ export default function ExplainButton({ cardId, initialExplanation }: ExplainBut
         style={{
           width: "100%",
           padding: "16px",
-          background: loading ? "var(--muted)" : "var(--accent)",
-          color: "#fff",
-          border: "2px solid var(--accent)",
-          fontSize: "18px",
-          fontWeight: "bold",
+          background: loading ? "#e5e5e5" : "#000",
+          color: loading ? "#666" : "#fff",
+          border: "2px solid #000",
+          fontSize: "15px",
+          fontWeight: "900",
           letterSpacing: "0.15em",
           textTransform: "uppercase",
           cursor: loading ? "not-allowed" : "pointer",
           fontFamily: "inherit",
-          opacity: loading ? 0.7 : 1,
         }}
       >
         {loading ? "THINKING..." : "EXPLAIN THIS CARD"}

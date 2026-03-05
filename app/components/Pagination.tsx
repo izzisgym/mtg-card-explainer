@@ -20,16 +20,16 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
     pages.push(totalPages);
   }
 
-  const btnBase = {
-    padding: "8px 12px",
-    fontSize: "12px",
-    fontWeight: "bold",
+  const btnBase: React.CSSProperties = {
+    padding: "8px 14px",
+    fontSize: "13px",
+    fontWeight: "800",
     letterSpacing: "0.05em",
     cursor: "pointer",
     fontFamily: "inherit",
-    border: "2px solid var(--accent)",
+    border: "2px solid #000",
     background: "transparent",
-    color: "var(--foreground)",
+    color: "#000",
   };
 
   return (
@@ -37,22 +37,22 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
       <button
         onClick={() => onPageChange(page - 1)}
         disabled={page <= 1}
-        style={{ ...btnBase, opacity: page <= 1 ? 0.3 : 1 }}
+        style={{ ...btnBase, opacity: page <= 1 ? 0.25 : 1 }}
       >
         ←
       </button>
 
       {pages.map((p, i) =>
         p === "..." ? (
-          <span key={`e-${i}`} style={{ padding: "8px 4px", color: "var(--muted-fg)", fontSize: "12px" }}>…</span>
+          <span key={`e-${i}`} style={{ padding: "8px 6px", color: "#666", fontSize: "13px", fontWeight: "bold" }}>…</span>
         ) : (
           <button
             key={p}
             onClick={() => onPageChange(p as number)}
             style={{
               ...btnBase,
-              background: p === page ? "var(--accent)" : "transparent",
-              color: p === page ? "#fff" : "var(--foreground)",
+              background: p === page ? "#000" : "transparent",
+              color: p === page ? "#fff" : "#000",
             }}
           >
             {p}
@@ -63,7 +63,7 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
       <button
         onClick={() => onPageChange(page + 1)}
         disabled={page >= totalPages}
-        style={{ ...btnBase, opacity: page >= totalPages ? 0.3 : 1 }}
+        style={{ ...btnBase, opacity: page >= totalPages ? 0.25 : 1 }}
       >
         →
       </button>

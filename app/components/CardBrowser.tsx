@@ -114,13 +114,13 @@ export default function CardBrowser({
   );
 
   const inputStyle = {
-    background: "var(--card-bg)",
-    border: "2px solid var(--accent)",
-    color: "var(--foreground)",
+    background: "#fff",
+    border: "2px solid #000",
+    color: "#000",
     outline: "none",
     padding: "12px 16px",
-    fontSize: "16px",
-    letterSpacing: "0.05em",
+    fontSize: "15px",
+    letterSpacing: "0.03em",
     width: "100%",
   };
 
@@ -165,14 +165,15 @@ export default function CardBrowser({
             <button
               type="submit"
               style={{
-                background: "var(--accent)",
+                background: "#000",
                 color: "#fff",
-                border: "2px solid var(--accent)",
-                padding: "10px 24px",
-                fontWeight: "bold",
-                fontSize: "16px",
-                letterSpacing: "0.1em",
+                border: "2px solid #000",
+                padding: "12px 28px",
+                fontWeight: "800",
+                fontSize: "14px",
+                letterSpacing: "0.12em",
                 cursor: "pointer",
+                textTransform: "uppercase",
               }}
             >
               SEARCH
@@ -184,8 +185,8 @@ export default function CardBrowser({
       {/* Count */}
       {initialTotal > 0 && (
         <p
-          className="text-base uppercase tracking-widest mb-4"
-          style={{ color: "var(--muted-fg)", borderLeft: "3px solid var(--accent)", paddingLeft: "8px" }}
+          className="text-sm uppercase tracking-widest mb-4 font-bold"
+          style={{ color: "#666", borderLeft: "3px solid #000", paddingLeft: "10px" }}
         >
           {initialTotal.toLocaleString()} {initialTotal === 1 ? "card" : "cards"}
           {initialQuery && ` — "${initialQuery}"`}
@@ -196,8 +197,8 @@ export default function CardBrowser({
       {isPending && (
         <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
           <div
-            className="px-6 py-3 text-sm font-bold uppercase tracking-widest"
-            style={{ background: "var(--accent)", color: "#fff", border: "2px solid #fff" }}
+            className="px-6 py-3 text-sm font-black uppercase tracking-widest"
+            style={{ background: "#000", color: "#fff" }}
           >
             LOADING...
           </div>
@@ -217,10 +218,10 @@ export default function CardBrowser({
       ) : (
         <div
           className="py-20 text-center"
-          style={{ border: "2px solid var(--accent)" }}
+          style={{ border: "2px solid #000" }}
         >
-          <p className="text-3xl font-bold mb-2" style={{ color: "var(--accent)" }}>—</p>
-          <p className="text-base uppercase tracking-widest" style={{ color: "var(--muted-fg)" }}>No cards found</p>
+          <p className="text-3xl font-black mb-2">—</p>
+          <p className="text-sm uppercase tracking-widest font-bold" style={{ color: "#666" }}>No cards found</p>
         </div>
       )}
     </div>
