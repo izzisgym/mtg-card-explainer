@@ -58,19 +58,19 @@ export function CardGridItem({ id, name, typeLine, manaCost, colors, setCode, ra
         </div>
 
         {/* Info */}
-        <div className="p-2" style={{ borderTop: "2px solid var(--accent)" }}>
-          <h3 className="font-bold text-xs uppercase tracking-wide leading-tight truncate mb-1" title={name}>
+        <div className="p-3" style={{ borderTop: "2px solid var(--accent)" }}>
+          <h3 className="font-bold text-sm uppercase tracking-wide leading-tight truncate mb-1" title={name}>
             {name}
           </h3>
           <p className="text-xs truncate" style={{ color: "var(--muted-fg)" }}>
             {typeLine}
           </p>
-          <div className="flex items-center justify-between mt-1.5">
-            <span className="text-xs uppercase font-bold" style={{ color: "var(--accent-light)" }}>
+          <div className="flex items-center justify-between mt-2">
+            <span className="text-sm uppercase font-bold" style={{ color: "var(--accent-light)" }}>
               {setCode}
             </span>
             {manaCost && (
-              <span className="text-xs" style={{ color: "var(--muted-fg)" }}>
+              <span className="text-sm" style={{ color: "var(--muted-fg)" }}>
                 {manaCost.replace(/[{}]/g, "")}
               </span>
             )}

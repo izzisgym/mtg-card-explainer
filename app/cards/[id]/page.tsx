@@ -95,7 +95,7 @@ export default async function CardDetailPage({ params }: Props) {
       {/* Back */}
       <Link
         href="/"
-        className="inline-block text-xs font-bold uppercase tracking-widest mb-6"
+        className="inline-block text-sm font-bold uppercase tracking-widest mb-6"
         style={{ color: "var(--accent-light)", borderBottom: "2px solid var(--accent)" }}
       >
         ← BACK
@@ -127,17 +127,17 @@ export default async function CardDetailPage({ params }: Props) {
         </div>
 
         {/* Details */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-5">
           {/* Name + rarity */}
-          <div style={{ borderBottom: "3px solid var(--accent)", paddingBottom: "12px" }}>
-            <h1 className="text-2xl font-bold uppercase tracking-wide">{card.name}</h1>
-            <div className="flex items-center gap-3 mt-1 flex-wrap">
-              <span className="text-sm uppercase tracking-wide" style={{ color: "var(--muted-fg)" }}>
+          <div style={{ borderBottom: "3px solid var(--accent)", paddingBottom: "14px" }}>
+            <h1 className="text-3xl font-bold uppercase tracking-wide">{card.name}</h1>
+            <div className="flex items-center gap-3 mt-2 flex-wrap">
+              <span className="text-base uppercase tracking-wide" style={{ color: "var(--muted-fg)" }}>
                 {card.typeLine}
               </span>
               {card.rarity && (
                 <span
-                  className="text-xs font-bold uppercase px-2 py-0.5"
+                  className="text-sm font-bold uppercase px-2 py-0.5"
                   style={{ background: "#111", color: rarityColor, border: `2px solid ${rarityColor}` }}
                 >
                   {card.rarity}
@@ -160,7 +160,7 @@ export default async function CardDetailPage({ params }: Props) {
               {card.colors.map((c) => (
                 <span
                   key={c}
-                  className="text-xs font-bold px-2 py-1 uppercase tracking-widest"
+                  className="text-sm font-bold px-3 py-1 uppercase tracking-widest"
                   style={{ border: "2px solid var(--accent)", color: "var(--foreground)" }}
                 >
                   {COLOR_NAMES[c] ?? c}
@@ -175,7 +175,7 @@ export default async function CardDetailPage({ params }: Props) {
               {card.keywords.map((kw) => (
                 <span
                   key={kw}
-                  className="text-xs font-bold px-2 py-1 uppercase tracking-wide"
+                  className="text-sm font-bold px-3 py-1 uppercase tracking-wide"
                   style={{ background: "var(--accent)", color: "#fff" }}
                 >
                   {kw}
@@ -186,14 +186,14 @@ export default async function CardDetailPage({ params }: Props) {
 
           {/* Card text */}
           {card.oracleText && (
-            <div style={{ border: "2px solid var(--muted)", padding: "12px" }}>
+            <div style={{ border: "2px solid var(--muted)", padding: "16px" }}>
               <p
-                className="text-xs font-bold uppercase tracking-widest mb-2"
+                className="text-sm font-bold uppercase tracking-widest mb-3"
                 style={{ color: "var(--muted-fg)" }}
               >
                 Card Text
               </p>
-              <p className="text-sm leading-relaxed whitespace-pre-wrap">{card.oracleText}</p>
+              <p className="text-base leading-relaxed whitespace-pre-wrap">{card.oracleText}</p>
             </div>
           )}
 
@@ -256,7 +256,7 @@ export default async function CardDetailPage({ params }: Props) {
 function StatBadge({ label, value }: { label: string; value: string }) {
   return (
     <div
-      className="text-xs px-2 py-1"
+      className="text-sm px-3 py-1.5"
       style={{ border: "2px solid var(--accent)", background: "var(--card-bg)" }}
     >
       <span className="font-bold uppercase tracking-wide" style={{ color: "var(--muted-fg)" }}>{label}: </span>

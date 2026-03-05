@@ -178,7 +178,7 @@ export default function CardBrowser({
       {/* Count */}
       {initialTotal > 0 && (
         <p
-          className="text-xs uppercase tracking-widest mb-4"
+          className="text-sm uppercase tracking-widest mb-4"
           style={{ color: "var(--muted-fg)", borderLeft: "3px solid var(--accent)", paddingLeft: "8px" }}
         >
           {initialTotal.toLocaleString()} {initialTotal === 1 ? "card" : "cards"}

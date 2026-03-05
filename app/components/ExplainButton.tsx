@@ -29,20 +29,8 @@ export default function ExplainButton({ cardId, initialExplanation }: ExplainBut
 
   if (explanation) {
     return (
-      <div style={{ border: "2px solid var(--accent)", padding: "16px" }}>
-        <p
-          className="text-xs font-bold uppercase tracking-widest mb-3"
-          style={{
-            color: "#fff",
-            background: "var(--accent)",
-            display: "inline-block",
-            padding: "2px 8px",
-            marginBottom: "10px",
-          }}
-        >
-          AI Explanation
-        </p>
-        <p className="text-sm leading-relaxed">{explanation}</p>
+      <div style={{ border: "2px solid var(--accent)", padding: "20px" }}>
+        <p className="text-base leading-relaxed">{explanation}</p>
       </div>
     );
   }
