@@ -60,18 +60,18 @@ function mapScryfallCard(card: ScryfallCard) {
   return {
     id: card.id,
     name: card.name,
-    oracleText: card.oracle_text ?? null,
-    typeLine: card.type_line,
-    manaCost: card.mana_cost ?? null,
+    oracleText: card.oracle_text || null,
+    typeLine: card.type_line || "Unknown",
+    manaCost: card.mana_cost || null,
     colors: card.colors ?? card.color_identity ?? [],
-    setCode: card.set,
-    setName: card.set_name ?? null,
-    rarity: card.rarity ?? null,
+    setCode: card.set || "???",
+    setName: card.set_name || null,
+    rarity: card.rarity || null,
     imageUrl: getCardImageUrl(card) ?? null,
     scryfallUri: card.scryfall_uri,
-    power: card.power ?? null,
-    toughness: card.toughness ?? null,
-    loyalty: card.loyalty ?? null,
+    power: card.power || null,
+    toughness: card.toughness || null,
+    loyalty: card.loyalty || null,
     keywords: card.keywords ?? [],
   };
 }
@@ -136,8 +136,10 @@ async function importCards(filePath: string, withImages: boolean, limit?: number
   for (const card of allCards) {
     if (limit && count >= limit) break;
 
-    // Skip tokens, emblems, art cards
+    // Skip tokens, emblems, art cards, or cards missing required fields
     if (
+      !card.id ||
+      !card.name ||
       card.type_line?.toLowerCase().includes("token") ||
       card.type_line?.toLowerCase().includes("emblem") ||
       card.set?.startsWith("t")
