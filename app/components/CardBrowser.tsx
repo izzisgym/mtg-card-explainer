@@ -117,8 +117,8 @@ export default function CardBrowser({
     border: "2px solid var(--accent)",
     color: "var(--foreground)",
     outline: "none",
-    padding: "10px 14px",
-    fontSize: "13px",
+    padding: "12px 16px",
+    fontSize: "16px",
     letterSpacing: "0.05em",
     width: "100%",
   };
@@ -164,7 +164,7 @@ export default function CardBrowser({
                 border: "2px solid var(--accent)",
                 padding: "10px 24px",
                 fontWeight: "bold",
-                fontSize: "13px",
+                fontSize: "16px",
                 letterSpacing: "0.1em",
                 cursor: "pointer",
               }}
@@ -178,7 +178,7 @@ export default function CardBrowser({
       {/* Count */}
       {initialTotal > 0 && (
         <p
-          className="text-sm uppercase tracking-widest mb-4"
+          className="text-base uppercase tracking-widest mb-4"
           style={{ color: "var(--muted-fg)", borderLeft: "3px solid var(--accent)", paddingLeft: "8px" }}
         >
           {initialTotal.toLocaleString()} {initialTotal === 1 ? "card" : "cards"}
@@ -214,7 +214,7 @@ export default function CardBrowser({
           style={{ border: "2px solid var(--accent)" }}
         >
           <p className="text-3xl font-bold mb-2" style={{ color: "var(--accent)" }}>—</p>
-          <p className="text-sm uppercase tracking-widest" style={{ color: "var(--muted-fg)" }}>No cards found</p>
+          <p className="text-base uppercase tracking-widest" style={{ color: "var(--muted-fg)" }}>No cards found</p>
         </div>
       )}
     </div>

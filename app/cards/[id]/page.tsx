@@ -95,7 +95,7 @@ export default async function CardDetailPage({ params }: Props) {
       {/* Back */}
       <Link
         href="/"
-        className="inline-block text-sm font-bold uppercase tracking-widest mb-6"
+        className="inline-block text-base font-bold uppercase tracking-widest mb-6"
         style={{ color: "var(--accent-light)", borderBottom: "2px solid var(--accent)" }}
       >
         ← BACK
@@ -137,7 +137,7 @@ export default async function CardDetailPage({ params }: Props) {
               </span>
               {card.rarity && (
                 <span
-                  className="text-sm font-bold uppercase px-2 py-0.5"
+                  className="text-base font-bold uppercase px-2 py-0.5"
                   style={{ background: "#111", color: rarityColor, border: `2px solid ${rarityColor}` }}
                 >
                   {card.rarity}
@@ -188,7 +188,7 @@ export default async function CardDetailPage({ params }: Props) {
           {card.oracleText && (
             <div style={{ border: "2px solid var(--muted)", padding: "16px" }}>
               <p
-                className="text-sm font-bold uppercase tracking-widest mb-3"
+                className="text-base font-bold uppercase tracking-widest mb-3"
                 style={{ color: "var(--muted-fg)" }}
               >
                 Card Text
@@ -206,7 +206,7 @@ export default async function CardDetailPage({ params }: Props) {
       {otherVersions.length > 0 && (
         <div className="mt-12 max-w-4xl">
           <h2
-            className="text-sm font-bold uppercase tracking-widest mb-4"
+            className="text-base font-bold uppercase tracking-widest mb-4"
             style={{ borderLeft: "4px solid var(--accent)", paddingLeft: "10px" }}
           >
             Other Versions ({otherVersions.length})
@@ -239,7 +239,7 @@ export default async function CardDetailPage({ params }: Props) {
                   </div>
                 )}
                 <span
-                  className="text-xs font-bold uppercase tracking-wide text-center"
+                  className="text-sm font-bold uppercase tracking-wide text-center"
                   style={{ color: "var(--accent-light)" }}
                 >
                   {v.setCode.toUpperCase()}
@@ -256,7 +256,7 @@ export default async function CardDetailPage({ params }: Props) {
 function StatBadge({ label, value }: { label: string; value: string }) {
   return (
     <div
-      className="text-sm px-3 py-1.5"
+      className="text-base px-3 py-1.5"
       style={{ border: "2px solid var(--accent)", background: "var(--card-bg)" }}
     >
       <span className="font-bold uppercase tracking-wide" style={{ color: "var(--muted-fg)" }}>{label}: </span>
