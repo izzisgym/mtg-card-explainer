@@ -142,13 +142,15 @@ async function importCards(filePath: string, withImages: boolean, limit?: number
   for (const card of allCards) {
     if (limit && count >= limit) break;
 
-    // Skip tokens, emblems, art cards, or cards missing required fields
+    // Skip tokens, emblems, art series, and cards missing required fields
     if (
       !card.id ||
       !card.name ||
       card.layout === "token" ||
       card.layout === "emblem" ||
+      card.layout === "art_series" ||
       card.set_type === "token" ||
+      card.set_type === "memorabilia" ||
       card.type_line?.toLowerCase().includes("token") ||
       card.type_line?.toLowerCase().includes("emblem")
     ) {
