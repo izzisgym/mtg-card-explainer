@@ -17,6 +17,7 @@ export interface ScryfallCard {
   set_name?: string;
   set_type?: string;
   layout?: string;
+  released_at?: string;
   rarity?: string;
   scryfall_uri: string;
   image_uris?: {

@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
           where,
           skip,
           take: PAGE_SIZE,
-          orderBy: { createdAt: "desc" },
+          orderBy: { releasedAt: "desc" },
           select: {
             id: true,
             name: true,
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
       prisma.card.findMany({
         skip,
         take: PAGE_SIZE,
-        orderBy: { createdAt: "desc" },
+        orderBy: { releasedAt: "desc" },
         select: {
           id: true,
           name: true,

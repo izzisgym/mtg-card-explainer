@@ -25,10 +25,12 @@ model Card {
   keywords    String[]
   explanation String?
   explainedAt DateTime?
+  releasedAt  DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
   @@index([name])
   @@index([setCode])
   @@index([colors])
+  @@index([releasedAt])
 }

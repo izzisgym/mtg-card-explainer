@@ -73,6 +73,7 @@ function mapScryfallCard(card: ScryfallCard) {
     toughness: card.toughness || null,
     loyalty: card.loyalty || null,
     keywords: card.keywords ?? [],
+    releasedAt: card.released_at ? new Date(card.released_at) : null,
   };
 }
 
@@ -85,7 +86,7 @@ async function upsertBatch(
   const values = cards
     .map(
       (c, i) =>
-        `($${i * 15 + 1},$${i * 15 + 2},$${i * 15 + 3},$${i * 15 + 4},$${i * 15 + 5},$${i * 15 + 6}::text[],$${i * 15 + 7},$${i * 15 + 8},$${i * 15 + 9},$${i * 15 + 10},$${i * 15 + 11},$${i * 15 + 12},$${i * 15 + 13},$${i * 15 + 14},$${i * 15 + 15}::text[])`
+        `($${i * 16 + 1},$${i * 16 + 2},$${i * 16 + 3},$${i * 16 + 4},$${i * 16 + 5},$${i * 16 + 6}::text[],$${i * 16 + 7},$${i * 16 + 8},$${i * 16 + 9},$${i * 16 + 10},$${i * 16 + 11},$${i * 16 + 12},$${i * 16 + 13},$${i * 16 + 14},$${i * 16 + 15}::text[],$${i * 16 + 16}::timestamp)`
     )
     .join(",");
 
@@ -94,20 +95,21 @@ async function upsertBatch(
     params.push(
       c.id, c.name, c.oracleText, c.typeLine, c.manaCost,
       c.colors, c.setCode, c.setName, c.rarity, c.imageUrl,
-      c.scryfallUri, c.power, c.toughness, c.loyalty, c.keywords
+      c.scryfallUri, c.power, c.toughness, c.loyalty, c.keywords,
+      c.releasedAt ?? null
     );
   }
 
   await prisma.$executeRawUnsafe(
-    `INSERT INTO "Card" (id,name,"oracleText","typeLine","manaCost",colors,"setCode","setName",rarity,"imageUrl","scryfallUri",power,toughness,loyalty,keywords,"createdAt","updatedAt")
-     SELECT v.id,v.name,v."oracleText",v."typeLine",v."manaCost",v.colors,v."setCode",v."setName",v.rarity,v."imageUrl",v."scryfallUri",v.power,v.toughness,v.loyalty,v.keywords,NOW(),NOW()
-     FROM (VALUES ${values}) AS v(id,name,"oracleText","typeLine","manaCost",colors,"setCode","setName",rarity,"imageUrl","scryfallUri",power,toughness,loyalty,keywords)
+    `INSERT INTO "Card" (id,name,"oracleText","typeLine","manaCost",colors,"setCode","setName",rarity,"imageUrl","scryfallUri",power,toughness,loyalty,keywords,"releasedAt","createdAt","updatedAt")
+     SELECT v.id,v.name,v."oracleText",v."typeLine",v."manaCost",v.colors,v."setCode",v."setName",v.rarity,v."imageUrl",v."scryfallUri",v.power,v.toughness,v.loyalty,v.keywords,v."releasedAt",NOW(),NOW()
+     FROM (VALUES ${values}) AS v(id,name,"oracleText","typeLine","manaCost",colors,"setCode","setName",rarity,"imageUrl","scryfallUri",power,toughness,loyalty,keywords,"releasedAt")
      ON CONFLICT (id) DO UPDATE SET
        name=EXCLUDED.name,"oracleText"=EXCLUDED."oracleText","typeLine"=EXCLUDED."typeLine",
        "manaCost"=EXCLUDED."manaCost",colors=EXCLUDED.colors,"setCode"=EXCLUDED."setCode",
        "setName"=EXCLUDED."setName",rarity=EXCLUDED.rarity,"imageUrl"=COALESCE("Card"."imageUrl",EXCLUDED."imageUrl"),
        "scryfallUri"=EXCLUDED."scryfallUri",power=EXCLUDED.power,toughness=EXCLUDED.toughness,
-       loyalty=EXCLUDED.loyalty,keywords=EXCLUDED.keywords,"updatedAt"=NOW()`,
+       loyalty=EXCLUDED.loyalty,keywords=EXCLUDED.keywords,"releasedAt"=EXCLUDED."releasedAt","updatedAt"=NOW()`,
     ...params
   );
 
