@@ -94,6 +94,16 @@ export default async function CardDetailPage({ params }: Props) {
 
   if (!card) notFound();
 
+  // Fetch other printings of the same card name
+  let otherVersions: { id: string; setName: string | null; setCode: string; rarity: string | null; imageUrl: string | null }[] = [];
+  try {
+    otherVersions = await prisma.card.findMany({
+      where: { name: card.name, id: { not: card.id } },
+      orderBy: { setCode: "asc" },
+      select: { id: true, setName: true, setCode: true, rarity: true, imageUrl: true },
+    });
+  } catch {}
+
   const rarityColor = card.rarity ? RARITY_STYLES[card.rarity] ?? "#9ca3af" : "#9ca3af";
 
   return (
@@ -229,6 +239,45 @@ export default async function CardDetailPage({ params }: Props) {
           </div>
         </div>
       </div>
+
+      {/* Other Versions */}
+      {otherVersions.length > 0 && (
+        <div className="mt-12 max-w-4xl">
+          <h2 className="text-lg font-semibold mb-4" style={{ color: "rgba(232,232,240,0.7)" }}>
+            Other Versions
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            {otherVersions.map((v) => (
+              <Link
+                key={v.id}
+                href={`/cards/${v.id}`}
+                className="flex flex-col items-center gap-2 p-3 rounded-xl transition-all hover:scale-105"
+                style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", width: "100px" }}
+              >
+                {v.imageUrl ? (
+                  <div className="relative w-full rounded-lg overflow-hidden" style={{ aspectRatio: "5/7" }}>
+                    <Image
+                      src={v.imageUrl}
+                      alt={`${v.setName ?? v.setCode} printing`}
+                      fill
+                      className="object-contain"
+                      unoptimized
+                      sizes="100px"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-full rounded-lg flex items-center justify-center" style={{ aspectRatio: "5/7", background: "var(--card-border)" }}>
+                    <span className="text-2xl opacity-30">🃏</span>
+                  </div>
+                )}
+                <span className="text-xs text-center font-medium uppercase tracking-wide" style={{ color: "rgba(232,232,240,0.5)" }}>
+                  {v.setCode.toUpperCase()}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

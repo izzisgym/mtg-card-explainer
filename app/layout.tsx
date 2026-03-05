@@ -26,10 +26,6 @@ export default function RootLayout({
               <span className="text-xl font-bold" style={{ color: "var(--accent-light)" }}>
                 Magic Cards Explained
               </span>
-            </Link>
-            <span className="text-sm" style={{ color: "rgba(232,232,240,0.5)" }}>
-              AI-powered card explanations
-            </span>
           </div>
         </header>
         <main className="max-w-7xl mx-auto px-4 py-8">{children}</main>
