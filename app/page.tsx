@@ -72,12 +72,13 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
 
   return (
     <div>
-      <div className="mb-8 pb-6" style={{ borderBottom: "3px solid #000" }}>
+      <div className="mb-10 pb-6" style={{ borderBottom: "4px solid var(--accent)" }}>
         <h1
-          className="text-4xl sm:text-5xl font-black uppercase tracking-tight"
-          style={{ letterSpacing: "-0.02em" }}
+          className="text-6xl sm:text-7xl font-black uppercase"
+          style={{ letterSpacing: "-0.03em", lineHeight: 1.05 }}
         >
-          What does this<br />Magic card do?
+          What does this<br />
+          <span style={{ color: "var(--accent)" }}>Magic card</span> do?
         </h1>
       </div>
 

@@ -89,7 +89,7 @@ export default function SetFilter({ value, onChange, inputStyle }: SetFilterProp
               background: "none",
               border: "none",
               cursor: "pointer",
-              color: "#000",
+              color: "var(--accent-light)",
               fontSize: "18px",
               fontWeight: "800",
               lineHeight: 1,
@@ -110,8 +110,8 @@ export default function SetFilter({ value, onChange, inputStyle }: SetFilterProp
             left: 0,
             right: 0,
             zIndex: 100,
-            background: "#fff",
-            border: "2px solid #000",
+            background: "var(--card-bg)",
+            border: "2px solid var(--accent)",
             borderTop: "none",
             maxHeight: "260px",
             overflowY: "auto",
@@ -128,16 +128,16 @@ export default function SetFilter({ value, onChange, inputStyle }: SetFilterProp
                 padding: "10px 14px",
                 background: "none",
                 border: "none",
-                borderBottom: "1px solid #e5e5e5",
+                borderBottom: "1px solid var(--muted)",
                 cursor: "pointer",
                 fontFamily: "inherit",
                 fontSize: "14px",
-                color: "#000",
+                color: "var(--foreground)",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#f5f5f5")}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "var(--muted)")}
               onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
             >
-              <span style={{ fontWeight: "800" }}>
+              <span style={{ fontWeight: "800", color: "var(--accent-light)" }}>
                 {opt.code.toUpperCase()}
               </span>
               {" — "}

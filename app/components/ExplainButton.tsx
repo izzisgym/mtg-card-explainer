@@ -42,17 +42,17 @@ export default function ExplainButton({ cardId, initialExplanation }: ExplainBut
   if (explanation) {
     const parsed = parseExplanation(explanation);
     return (
-      <div style={{ border: "2px solid #000" }}>
+      <div style={{ border: "2px solid var(--accent)" }}>
         {parsed ? (
           <>
-            <div style={{ padding: "20px 24px", borderBottom: "2px solid #000" }}>
-              <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "#666" }}>
+            <div style={{ padding: "20px 24px", borderBottom: "2px solid var(--accent)" }}>
+              <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "var(--accent-light)" }}>
                 What it does
               </p>
               <p className="text-base leading-relaxed">{parsed.whatItDoes}</p>
             </div>
             <div style={{ padding: "20px 24px" }}>
-              <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "#666" }}>
+              <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "var(--accent-light)" }}>
                 Why you&apos;d play it
               </p>
               <p className="text-base leading-relaxed">{parsed.whyPlay}</p>
@@ -72,7 +72,7 @@ export default function ExplainButton({ cardId, initialExplanation }: ExplainBut
       {error && (
         <p
           className="text-sm font-black uppercase tracking-wide mb-3 p-3"
-          style={{ color: "#000", border: "2px solid #000", background: "#fff" }}
+          style={{ color: "var(--accent-light)", border: "2px solid var(--accent)", background: "var(--card-bg)" }}
         >
           ERROR: {error}
         </p>
@@ -82,16 +82,17 @@ export default function ExplainButton({ cardId, initialExplanation }: ExplainBut
         disabled={loading}
         style={{
           width: "100%",
-          padding: "16px",
-          background: loading ? "#e5e5e5" : "#000",
-          color: loading ? "#666" : "#fff",
-          border: "2px solid #000",
-          fontSize: "15px",
+          padding: "18px",
+          background: loading ? "var(--muted)" : "var(--accent)",
+          color: "#fff",
+          border: "2px solid var(--accent)",
+          fontSize: "18px",
           fontWeight: "900",
-          letterSpacing: "0.15em",
+          letterSpacing: "0.2em",
           textTransform: "uppercase",
           cursor: loading ? "not-allowed" : "pointer",
           fontFamily: "inherit",
+          opacity: loading ? 0.7 : 1,
         }}
       >
         {loading ? "THINKING..." : "EXPLAIN THIS CARD"}

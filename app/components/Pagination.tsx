@@ -23,19 +23,19 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
   }
 
   const btnBase: React.CSSProperties = {
-    padding: "8px 14px",
-    fontSize: "13px",
-    fontWeight: "800",
+    padding: "10px 16px",
+    fontSize: "14px",
+    fontWeight: "900",
     letterSpacing: "0.05em",
     cursor: "pointer",
     fontFamily: "inherit",
-    border: "2px solid #000",
+    border: "2px solid var(--accent)",
     background: "transparent",
-    color: "#000",
+    color: "var(--foreground)",
   };
 
   return (
-    <div className="flex items-center justify-center gap-1 mt-8 flex-wrap">
+    <div className="flex items-center justify-center gap-1 mt-10 flex-wrap">
       <button
         onClick={() => onPageChange(page - 1)}
         disabled={page <= 1}
@@ -46,15 +46,15 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
 
       {pages.map((p, i) =>
         p === "..." ? (
-          <span key={`e-${i}`} style={{ padding: "8px 6px", color: "#666", fontSize: "13px", fontWeight: "bold" }}>…</span>
+          <span key={`e-${i}`} style={{ padding: "10px 8px", color: "var(--accent-light)", fontSize: "14px", fontWeight: "bold" }}>…</span>
         ) : (
           <button
             key={p}
             onClick={() => onPageChange(p as number)}
             style={{
               ...btnBase,
-              background: p === page ? "#000" : "transparent",
-              color: p === page ? "#fff" : "#000",
+              background: p === page ? "var(--accent)" : "transparent",
+              color: p === page ? "#fff" : "var(--foreground)",
             }}
           >
             {p}

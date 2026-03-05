@@ -25,9 +25,9 @@ const RARITY_LABEL: Record<string, string> = {
 export function CardGridItem({ id, name, typeLine, manaCost, setCode, rarity, imageUrl }: CardGridItemProps) {
   return (
     <Link href={`/cards/${id}`} className="block">
-      <div className="card-hover overflow-hidden cursor-pointer h-full" style={{ background: "#fff" }}>
+      <div className="card-hover overflow-hidden cursor-pointer h-full" style={{ background: "var(--card-bg)" }}>
         {/* Image */}
-        <div className="relative aspect-[5/7] overflow-hidden" style={{ background: "#f0f0f0" }}>
+        <div className="relative aspect-[5/7] overflow-hidden" style={{ background: "#1a1a1a" }}>
           {imageUrl ? (
             <Image
               src={imageUrl}
@@ -39,13 +39,13 @@ export function CardGridItem({ id, name, typeLine, manaCost, setCode, rarity, im
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <span className="text-3xl font-black opacity-20">?</span>
+              <span className="text-3xl font-black opacity-20" style={{ color: "var(--accent)" }}>?</span>
             </div>
           )}
           {rarity && (
             <span
               className="absolute top-0 right-0 text-xs font-black px-1.5 py-0.5"
-              style={{ background: "#000", color: "#fff", letterSpacing: "0.08em" }}
+              style={{ background: "var(--accent)", color: "#fff", letterSpacing: "0.08em" }}
             >
               {RARITY_LABEL[rarity] ?? rarity[0].toUpperCase()}
             </span>
@@ -53,19 +53,20 @@ export function CardGridItem({ id, name, typeLine, manaCost, setCode, rarity, im
         </div>
 
         {/* Info */}
-        <div className="p-3" style={{ borderTop: "2px solid #000" }}>
-          <h3 className="font-black text-sm uppercase tracking-tight leading-tight truncate mb-1" title={name}>
+        <div className="p-3" style={{ borderTop: "2px solid var(--accent)" }}>
+          <h3 className="font-black text-sm uppercase tracking-tight leading-tight truncate mb-1" title={name}
+              style={{ color: "var(--foreground)" }}>
             {name}
           </h3>
-          <p className="text-xs truncate" style={{ color: "#666" }}>
+          <p className="text-xs truncate" style={{ color: "var(--muted-fg)" }}>
             {typeLine}
           </p>
           <div className="flex items-center justify-between mt-2">
-            <span className="text-xs uppercase font-bold" style={{ color: "#666" }}>
+            <span className="text-xs uppercase font-black" style={{ color: "var(--accent-light)" }}>
               {setCode.toUpperCase()}
             </span>
             {manaCost && (
-              <span className="text-xs font-bold" style={{ color: "#000" }}>
+              <span className="text-xs font-bold" style={{ color: "var(--muted-fg)" }}>
                 {manaCost.replace(/[{}]/g, "")}
               </span>
             )}

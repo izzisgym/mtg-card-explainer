@@ -1,16 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #000000;
-  --card-bg: #ffffff;
-  --card-border: #000000;
-  --accent: #000000;
-  --accent-light: #333333;
+  --background: #0d0d0d;
+  --foreground: #f0f0f0;
+  --card-bg: #111111;
+  --card-border: #592c80;
+  --accent: #592c80;
+  --accent-light: #8b47c4;
   --accent-fg: #ffffff;
-  --muted: #e5e5e5;
-  --muted-fg: #666666;
-  --highlight: #592c80;
+  --muted: #2a2a2a;
+  --muted-fg: #999999;
 }
 
 @theme inline {
@@ -26,7 +25,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.6;
 }
 
@@ -36,17 +35,23 @@ input, select, button, textarea {
 
 .card-hover {
   transition: transform 0.1s ease, box-shadow 0.1s ease;
-  border: 2px solid #000 !important;
+  border: 2px solid var(--accent) !important;
 }
 
 .card-hover:hover {
-  transform: translate(-3px, -3px);
-  box-shadow: 4px 4px 0px #000;
+  transform: translate(-4px, -4px);
+  box-shadow: 6px 6px 0px var(--accent);
 }
 
 .version-thumb {
-  transition: transform 0.1s ease;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 .version-thumb:hover {
-  transform: translate(-2px, -2px);
+  transform: translate(-3px, -3px);
+  box-shadow: 4px 4px 0px var(--accent);
+}
+
+.brutalist-heading {
+  border-left: 6px solid var(--accent);
+  padding-left: 16px;
 }

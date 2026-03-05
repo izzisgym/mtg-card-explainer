@@ -85,8 +85,8 @@ export default async function CardDetailPage({ params }: Props) {
       {/* Back */}
       <Link
         href="/"
-        className="inline-block text-sm font-black uppercase tracking-widest mb-6"
-        style={{ color: "#000", borderBottom: "2px solid #000" }}
+        className="inline-block text-sm font-black uppercase tracking-widest mb-8"
+        style={{ color: "var(--accent-light)", borderBottom: "2px solid var(--accent)" }}
       >
         ← BACK
       </Link>
@@ -96,7 +96,7 @@ export default async function CardDetailPage({ params }: Props) {
         <div className="md:sticky md:top-8">
           <div
             className="relative w-full max-w-sm overflow-hidden"
-            style={{ aspectRatio: "5/7", border: "3px solid #000" }}
+            style={{ aspectRatio: "5/7", border: "3px solid var(--accent)" }}
           >
             {card.imageUrl ? (
               <Image
@@ -109,8 +109,8 @@ export default async function CardDetailPage({ params }: Props) {
                 sizes="(max-width: 768px) 90vw, 400px"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center" style={{ background: "#f0f0f0" }}>
-                <span className="font-black text-4xl" style={{ color: "#000" }}>?</span>
+              <div className="w-full h-full flex items-center justify-center" style={{ background: "#1a1a1a" }}>
+                <span className="font-black text-4xl" style={{ color: "var(--accent)" }}>?</span>
               </div>
             )}
           </div>
@@ -119,16 +119,16 @@ export default async function CardDetailPage({ params }: Props) {
         {/* Details */}
         <div className="flex flex-col gap-5">
           {/* Name + rarity */}
-          <div style={{ borderBottom: "3px solid #000", paddingBottom: "14px" }}>
-            <h1 className="text-3xl font-black uppercase tracking-tight" style={{ letterSpacing: "-0.01em" }}>{card.name}</h1>
-            <div className="flex items-center gap-3 mt-2 flex-wrap">
-              <span className="text-base uppercase tracking-wide font-bold" style={{ color: "#666" }}>
+          <div style={{ borderBottom: "3px solid var(--accent)", paddingBottom: "16px" }}>
+            <h1 className="text-4xl font-black uppercase" style={{ letterSpacing: "-0.02em", lineHeight: 1.1 }}>{card.name}</h1>
+            <div className="flex items-center gap-3 mt-3 flex-wrap">
+              <span className="text-base uppercase tracking-wide font-bold" style={{ color: "var(--muted-fg)" }}>
                 {card.typeLine}
               </span>
               {card.rarity && (
                 <span
                   className="text-sm font-black uppercase px-2 py-0.5"
-                  style={{ background: "#000", color: "#fff" }}
+                  style={{ background: "var(--accent)", color: "#fff" }}
                 >
                   {card.rarity}
                 </span>
@@ -151,7 +151,7 @@ export default async function CardDetailPage({ params }: Props) {
                 <span
                   key={c}
                   className="text-sm font-black px-3 py-1 uppercase tracking-widest"
-                  style={{ border: "2px solid #000", color: "#000" }}
+                  style={{ border: "2px solid var(--accent)", color: "var(--foreground)" }}
                 >
                   {COLOR_NAMES[c] ?? c}
                 </span>
@@ -166,7 +166,7 @@ export default async function CardDetailPage({ params }: Props) {
                 <span
                   key={kw}
                   className="text-sm font-black px-3 py-1 uppercase tracking-wide"
-                  style={{ background: "#000", color: "#fff" }}
+                  style={{ background: "var(--accent)", color: "#fff" }}
                 >
                   {kw}
                 </span>
@@ -176,10 +176,10 @@ export default async function CardDetailPage({ params }: Props) {
 
           {/* Card text */}
           {card.oracleText && (
-            <div style={{ border: "2px solid #e5e5e5", padding: "16px" }}>
+            <div style={{ border: "2px solid var(--accent)", padding: "20px" }}>
               <p
                 className="text-xs font-black uppercase tracking-widest mb-3"
-                style={{ color: "#666" }}
+                style={{ color: "var(--accent-light)" }}
               >
                 Card Text
               </p>
@@ -196,8 +196,7 @@ export default async function CardDetailPage({ params }: Props) {
       {otherVersions.length > 0 && (
         <div className="mt-12 max-w-4xl">
           <h2
-            className="text-sm font-black uppercase tracking-widest mb-4"
-            style={{ borderLeft: "4px solid #000", paddingLeft: "10px" }}
+            className="brutalist-heading text-base font-black uppercase tracking-widest mb-5"
           >
             Other Versions ({otherVersions.length})
           </h2>
@@ -207,7 +206,7 @@ export default async function CardDetailPage({ params }: Props) {
                 key={v.id}
                 href={`/cards/${v.id}`}
                 className="version-thumb flex flex-col items-center gap-1 p-2"
-                style={{ border: "2px solid #000", width: "90px", background: "#fff" }}
+                style={{ border: "2px solid var(--accent)", width: "90px", background: "var(--card-bg)" }}
               >
                 {v.imageUrl ? (
                   <div className="relative w-full overflow-hidden" style={{ aspectRatio: "5/7" }}>
@@ -223,14 +222,14 @@ export default async function CardDetailPage({ params }: Props) {
                 ) : (
                   <div
                     className="w-full flex items-center justify-center font-black"
-                    style={{ aspectRatio: "5/7", background: "#f0f0f0", color: "#000" }}
+                    style={{ aspectRatio: "5/7", background: "#1a1a1a", color: "var(--accent)" }}
                   >
                     ?
                   </div>
                 )}
                 <span
                   className="text-xs font-black uppercase tracking-wide text-center"
-                  style={{ color: "#000" }}
+                  style={{ color: "var(--accent-light)" }}
                 >
                   {v.setCode.toUpperCase()}
                 </span>
@@ -247,10 +246,10 @@ function StatBadge({ label, value }: { label: string; value: string }) {
   return (
     <div
       className="text-sm px-3 py-1.5"
-      style={{ border: "2px solid #000", background: "#fff" }}
+      style={{ border: "2px solid var(--accent)", background: "var(--card-bg)" }}
     >
-      <span className="font-bold uppercase tracking-wide" style={{ color: "#666" }}>{label}: </span>
-      <span className="font-black">{value}</span>
+      <span className="font-bold uppercase tracking-wide" style={{ color: "var(--muted-fg)" }}>{label}: </span>
+      <span className="font-black" style={{ color: "var(--foreground)" }}>{value}</span>
     </div>
   );
 }
