@@ -3,7 +3,7 @@ import "./globals.css";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Magic Cards Explained",
+  title: "What does this Magic card do?",
   description: "Search Magic: The Gathering cards and get plain-English explanations powered by AI.",
   icons: { icon: "/favicon.ico" },
 };
@@ -19,10 +19,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 className="text-sm font-bold px-2 py-1"
                 style={{ background: "var(--accent)", color: "#fff", letterSpacing: "0.05em" }}
               >
-                MCE
+                WDC
               </span>
               <span className="text-lg font-bold uppercase tracking-widest">
-                Magic Cards Explained
+                What does this Magic card do?
               </span>
             </Link>
           </div>

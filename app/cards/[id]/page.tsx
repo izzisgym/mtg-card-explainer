@@ -28,12 +28,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const card = await prisma.card.findUnique({ where: { id } });
     if (card) {
       return {
-        title: `${card.name} | Magic Cards Explained`,
+        title: `${card.name} | What does this Magic card do?`,
         description: card.oracleText?.slice(0, 160) ?? `Learn what ${card.name} does in plain English.`,
       };
     }
   } catch {}
-  return { title: "Card | Magic Cards Explained" };
+  return { title: "Card | What does this Magic card do?" };
 }
 
 export default async function CardDetailPage({ params }: Props) {

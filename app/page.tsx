@@ -74,7 +74,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
     <div>
       <div className="mb-8 pb-4" style={{ borderBottom: "2px solid var(--accent)" }}>
         <h1 className="text-3xl sm:text-4xl font-bold uppercase tracking-widest brutalist-title">
-          Magic Cards Explained
+          What does this Magic card do?
         </h1>
       </div>
 

@@ -20,7 +20,7 @@ import { getBulkDataInfo, getCardImageUrl, type ScryfallCard } from "../lib/scry
 import { uploadImageToS3, imageExistsOnS3 } from "../lib/s3";
 
 const prisma = new PrismaClient();
-const BATCH_SIZE = 500;
+const BATCH_SIZE = 1000;
 const TMP_FILE = path.join(os.tmpdir(), "scryfall-bulk.json");
 
 async function downloadFile(url: string, dest: string): Promise<void> {
@@ -80,29 +80,35 @@ async function upsertBatch(
   cards: ReturnType<typeof mapScryfallCard>[],
   withImages: boolean
 ) {
-  await prisma.$transaction(
-    cards.map((card) =>
-      prisma.card.upsert({
-        where: { id: card.id },
-        update: {
-          name: card.name,
-          oracleText: card.oracleText,
-          typeLine: card.typeLine,
-          manaCost: card.manaCost,
-          colors: card.colors,
-          setCode: card.setCode,
-          setName: card.setName,
-          rarity: card.rarity,
-          imageUrl: card.imageUrl,
-          scryfallUri: card.scryfallUri,
-          power: card.power,
-          toughness: card.toughness,
-          loyalty: card.loyalty,
-          keywords: card.keywords,
-        },
-        create: card,
-      })
+  // Build a single INSERT ... ON CONFLICT DO UPDATE query for the whole batch.
+  // This is one DB round-trip instead of 500, which is critical over a remote proxy.
+  const values = cards
+    .map(
+      (c, i) =>
+        `($${i * 15 + 1},$${i * 15 + 2},$${i * 15 + 3},$${i * 15 + 4},$${i * 15 + 5},$${i * 15 + 6}::text[],$${i * 15 + 7},$${i * 15 + 8},$${i * 15 + 9},$${i * 15 + 10},$${i * 15 + 11},$${i * 15 + 12},$${i * 15 + 13},$${i * 15 + 14},$${i * 15 + 15}::text[])`
     )
+    .join(",");
+
+  const params: unknown[] = [];
+  for (const c of cards) {
+    params.push(
+      c.id, c.name, c.oracleText, c.typeLine, c.manaCost,
+      c.colors, c.setCode, c.setName, c.rarity, c.imageUrl,
+      c.scryfallUri, c.power, c.toughness, c.loyalty, c.keywords
+    );
+  }
+
+  await prisma.$executeRawUnsafe(
+    `INSERT INTO "Card" (id,name,"oracleText","typeLine","manaCost",colors,"setCode","setName",rarity,"imageUrl","scryfallUri",power,toughness,loyalty,keywords,"createdAt","updatedAt")
+     SELECT v.id,v.name,v."oracleText",v."typeLine",v."manaCost",v.colors,v."setCode",v."setName",v.rarity,v."imageUrl",v."scryfallUri",v.power,v.toughness,v.loyalty,v.keywords,NOW(),NOW()
+     FROM (VALUES ${values}) AS v(id,name,"oracleText","typeLine","manaCost",colors,"setCode","setName",rarity,"imageUrl","scryfallUri",power,toughness,loyalty,keywords)
+     ON CONFLICT (id) DO UPDATE SET
+       name=EXCLUDED.name,"oracleText"=EXCLUDED."oracleText","typeLine"=EXCLUDED."typeLine",
+       "manaCost"=EXCLUDED."manaCost",colors=EXCLUDED.colors,"setCode"=EXCLUDED."setCode",
+       "setName"=EXCLUDED."setName",rarity=EXCLUDED.rarity,"imageUrl"=COALESCE("Card"."imageUrl",EXCLUDED."imageUrl"),
+       "scryfallUri"=EXCLUDED."scryfallUri",power=EXCLUDED.power,toughness=EXCLUDED.toughness,
+       loyalty=EXCLUDED.loyalty,keywords=EXCLUDED.keywords,"updatedAt"=NOW()`,
+    ...params
   );
 
   if (withImages) {
