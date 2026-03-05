@@ -107,17 +107,17 @@ export default async function CardDetailPage({ params }: Props) {
         ← Back to search
       </Link>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-4xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-4xl items-start">
         {/* Card Image */}
-        <div className="flex justify-center md:justify-start">
-          <div className="relative w-full max-w-sm aspect-[5/7] rounded-2xl overflow-hidden shadow-2xl">
+        <div className="flex justify-center md:justify-start md:sticky md:top-8">
+          <div className="relative w-full max-w-sm rounded-2xl overflow-hidden shadow-2xl" style={{ aspectRatio: "5/7" }}>
             {card.imageUrl ? (
               <Image
                 src={card.imageUrl}
                 alt={card.name}
                 fill
                 priority
-                className="object-cover"
+                className="object-contain"
                 unoptimized
                 sizes="(max-width: 768px) 90vw, 400px"
               />
