@@ -19,6 +19,24 @@ function parseExplanation(text: string): { whatItDoes: string; whyPlay: string }
   return null;
 }
 
+// Split text into sentences and render each as its own paragraph
+function SentenceParagraphs({ text }: { text: string }) {
+  const sentences = text
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  return (
+    <>
+      {sentences.map((sentence, i) => (
+        <p key={i} className="text-lg leading-relaxed mb-3 last:mb-0">
+          {sentence}
+        </p>
+      ))}
+    </>
+  );
+}
+
 export default function ExplainButton({ cardId, initialExplanation }: ExplainButtonProps) {
   const [explanation, setExplanation] = useState<string | null>(initialExplanation ?? null);
   const [loading, setLoading] = useState(false);
@@ -45,22 +63,22 @@ export default function ExplainButton({ cardId, initialExplanation }: ExplainBut
       <div style={{ border: "2px solid var(--accent)" }}>
         {parsed ? (
           <>
-            <div style={{ padding: "20px 24px", borderBottom: "2px solid var(--accent)" }}>
-              <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "var(--accent-light)" }}>
-                What it does
+            <div style={{ padding: "24px 28px", borderBottom: "2px solid var(--accent)" }}>
+              <p className="text-xs font-black uppercase tracking-widest mb-4" style={{ color: "var(--accent-light)" }}>
+                What Does That Mean
               </p>
-              <p className="text-base leading-relaxed">{parsed.whatItDoes}</p>
+              <SentenceParagraphs text={parsed.whatItDoes} />
             </div>
-            <div style={{ padding: "20px 24px" }}>
-              <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "var(--accent-light)" }}>
-                Why you&apos;d play it
+            <div style={{ padding: "24px 28px" }}>
+              <p className="text-xs font-black uppercase tracking-widest mb-4" style={{ color: "var(--accent-light)" }}>
+                Why Is That Important
               </p>
-              <p className="text-base leading-relaxed">{parsed.whyPlay}</p>
+              <SentenceParagraphs text={parsed.whyPlay} />
             </div>
           </>
         ) : (
-          <div style={{ padding: "20px 24px" }}>
-            <p className="text-base leading-relaxed whitespace-pre-wrap">{explanation}</p>
+          <div style={{ padding: "24px 28px" }}>
+            <SentenceParagraphs text={explanation} />
           </div>
         )}
       </div>

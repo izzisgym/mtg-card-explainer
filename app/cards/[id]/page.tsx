@@ -91,11 +91,11 @@ export default async function CardDetailPage({ params }: Props) {
         ← BACK
       </Link>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-4xl items-start">
+      <div className="grid grid-cols-1 md:grid-cols-[minmax(280px,360px)_1fr] gap-8 lg:gap-16 items-start">
         {/* Image */}
         <div className="md:sticky md:top-8">
           <div
-            className="relative w-full max-w-sm overflow-hidden"
+            className="relative w-full overflow-hidden"
             style={{ aspectRatio: "5/7", border: "3px solid var(--accent)" }}
           >
             {card.imageUrl ? (
@@ -181,7 +181,7 @@ export default async function CardDetailPage({ params }: Props) {
                 className="text-xs font-black uppercase tracking-widest mb-3"
                 style={{ color: "var(--accent-light)" }}
               >
-                Card Text
+                What the Card Says
               </p>
               <p className="text-base leading-relaxed whitespace-pre-wrap">{card.oracleText}</p>
             </div>
@@ -194,7 +194,7 @@ export default async function CardDetailPage({ params }: Props) {
 
       {/* Other Versions */}
       {otherVersions.length > 0 && (
-        <div className="mt-12 max-w-4xl">
+        <div className="mt-12">
           <h2
             className="brutalist-heading text-base font-black uppercase tracking-widest mb-5"
           >
