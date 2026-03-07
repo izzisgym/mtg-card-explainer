@@ -92,67 +92,70 @@ export default async function CardDetailPage({ params }: Props) {
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-[minmax(300px,380px)_1fr] gap-10 lg:gap-16 items-start">
-        {/* Image */}
+        {/* Image column */}
         <div className="md:sticky md:top-8">
-          <div
-            className="relative w-full overflow-hidden"
-            style={{ aspectRatio: "5/7", border: "3px solid var(--accent)" }}
-          >
-            {card.imageUrl ? (
-              <Image
-                src={card.imageUrl}
-                alt={card.name}
-                fill
-                priority
-                className="object-contain"
-                unoptimized
-                sizes="(max-width: 768px) 90vw, 380px"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center" style={{ background: "#1a1a1a" }}>
-                <span className="font-black text-4xl" style={{ color: "var(--accent)" }}>?</span>
-              </div>
-            )}
-          </div>
-
-          {/* Stats under image — scannable at a glance */}
-          <div className="mt-4 flex flex-col gap-2">
-            {card.manaCost && <StatRow label="Mana Cost" value={card.manaCost.replace(/[{}]/g, "")} />}
-            {card.power && card.toughness && <StatRow label="Power / Toughness" value={`${card.power} / ${card.toughness}`} />}
-            {card.loyalty && <StatRow label="Loyalty" value={card.loyalty} />}
-            {card.setName && <StatRow label="Set" value={`${card.setName} (${card.setCode.toUpperCase()})`} />}
-            {card.rarity && <StatRow label="Rarity" value={card.rarity.charAt(0).toUpperCase() + card.rarity.slice(1)} />}
-          </div>
-
-          {/* Color identity */}
-          {card.colors.length > 0 && (
-            <div className="mt-3 flex gap-2 flex-wrap">
-              {card.colors.map((c) => (
-                <span
-                  key={c}
-                  className="text-xs font-black px-3 py-1 uppercase tracking-widest"
-                  style={{ border: "2px solid var(--accent)", color: "var(--foreground)" }}
-                >
-                  {COLOR_NAMES[c] ?? c}
-                </span>
-              ))}
+          {/* On mobile: image + stats side by side */}
+          <div className="flex gap-4 md:block">
+            <div
+              className="relative overflow-hidden shrink-0"
+              style={{ aspectRatio: "5/7", border: "3px solid var(--accent)", width: "clamp(120px, 35vw, 380px)" }}
+            >
+              {card.imageUrl ? (
+                <Image
+                  src={card.imageUrl}
+                  alt={card.name}
+                  fill
+                  priority
+                  className="object-contain"
+                  unoptimized
+                  sizes="(max-width: 768px) 35vw, 380px"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center" style={{ background: "#1a1a1a" }}>
+                  <span className="font-black text-4xl" style={{ color: "var(--accent)" }}>?</span>
+                </div>
+              )}
             </div>
-          )}
 
-          {/* Keywords */}
-          {card.keywords.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-2">
-              {card.keywords.map((kw) => (
-                <span
-                  key={kw}
-                  className="text-xs font-black px-3 py-1 uppercase tracking-wide"
-                  style={{ background: "var(--accent)", color: "#fff" }}
-                >
-                  {kw}
-                </span>
-              ))}
+            {/* Stats — visible beside image on mobile, below image on desktop */}
+            <div className="flex-1 md:mt-4 flex flex-col gap-0">
+              {card.manaCost && <StatRow label="Mana" value={card.manaCost.replace(/[{}]/g, "")} />}
+              {card.power && card.toughness && <StatRow label="P / T" value={`${card.power} / ${card.toughness}`} />}
+              {card.loyalty && <StatRow label="Loyalty" value={card.loyalty} />}
+              {card.setName && <StatRow label="Set" value={`${card.setName} (${card.setCode.toUpperCase()})`} />}
+              {card.rarity && <StatRow label="Rarity" value={card.rarity.charAt(0).toUpperCase() + card.rarity.slice(1)} />}
+
+              {/* Color identity */}
+              {card.colors.length > 0 && (
+                <div className="mt-3 flex gap-1.5 flex-wrap">
+                  {card.colors.map((c) => (
+                    <span
+                      key={c}
+                      className="text-xs font-black px-2 py-0.5 uppercase tracking-widest"
+                      style={{ border: "2px solid var(--accent)", color: "var(--foreground)" }}
+                    >
+                      {COLOR_NAMES[c] ?? c}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Keywords */}
+              {card.keywords.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {card.keywords.map((kw) => (
+                    <span
+                      key={kw}
+                      className="text-xs font-black px-2 py-0.5 uppercase tracking-wide"
+                      style={{ background: "var(--accent)", color: "#fff" }}
+                    >
+                      {kw}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
 
         {/* Details — max line length ~75ch for readability */}

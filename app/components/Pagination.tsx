@@ -23,8 +23,10 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
   }
 
   const btnBase: React.CSSProperties = {
-    padding: "10px 16px",
-    fontSize: "14px",
+    minWidth: "44px",
+    minHeight: "44px",
+    padding: "10px 14px",
+    fontSize: "15px",
     fontWeight: "900",
     letterSpacing: "0.05em",
     cursor: "pointer",
@@ -32,10 +34,13 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
     border: "2px solid var(--accent)",
     background: "transparent",
     color: "var(--foreground)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   };
 
   return (
-    <div className="flex items-center justify-center gap-1 mt-10 flex-wrap">
+    <div className="flex items-center justify-center gap-1 mt-8 flex-wrap">
       <button
         onClick={() => onPageChange(page - 1)}
         disabled={page <= 1}
@@ -46,7 +51,7 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
 
       {pages.map((p, i) =>
         p === "..." ? (
-          <span key={`e-${i}`} style={{ padding: "10px 8px", color: "var(--accent-light)", fontSize: "14px", fontWeight: "bold" }}>…</span>
+          <span key={`e-${i}`} style={{ padding: "10px 6px", color: "var(--accent-light)", fontSize: "14px", fontWeight: "bold" }}>…</span>
         ) : (
           <button
             key={p}

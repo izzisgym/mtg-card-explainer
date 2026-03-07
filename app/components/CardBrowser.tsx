@@ -126,60 +126,63 @@ export default function CardBrowser({
 
   return (
     <div>
-      {/* Search bar */}
-      <form onSubmit={handleSearch} className="mb-8">
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <div className="flex-1">
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="SEARCH CARDS..."
-              style={inputStyle}
-            />
-          </div>
-          <div className="flex gap-2 flex-wrap">
-            <select
-              value={color}
-              onChange={(e) => handleFilterChange("color", e.target.value)}
-              style={{ ...inputStyle, width: "auto", cursor: "pointer" }}
-            >
-              {COLOR_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
-            <select
-              value={type}
-              onChange={(e) => handleFilterChange("type", e.target.value)}
-              style={{ ...inputStyle, width: "auto", cursor: "pointer" }}
-            >
-              {TYPE_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
+      {/* Search bar — mobile-optimised layout */}
+      <form onSubmit={handleSearch} className="mb-6">
+        {/* Search input: full width on all sizes */}
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search cards..."
+          style={{ ...inputStyle, marginBottom: "8px" }}
+        />
+        {/* Filters: 2-col grid on mobile, row on larger screens */}
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-row sm:flex-wrap mb-2">
+          <select
+            value={color}
+            onChange={(e) => handleFilterChange("color", e.target.value)}
+            style={{ ...inputStyle, width: "auto", cursor: "pointer" }}
+          >
+            {COLOR_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+          <select
+            value={type}
+            onChange={(e) => handleFilterChange("type", e.target.value)}
+            style={{ ...inputStyle, width: "auto", cursor: "pointer" }}
+          >
+            {TYPE_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+          <div className="col-span-2 sm:col-span-1">
             <SetFilter
               value={set}
               onChange={(code) => handleFilterChange("set", code)}
               inputStyle={inputStyle}
             />
-            <button
-              type="submit"
-              style={{
-                background: "var(--accent)",
-                color: "#fff",
-                border: "2px solid var(--accent)",
-                padding: "12px 32px",
-                fontWeight: "900",
-                fontSize: "16px",
-                letterSpacing: "0.15em",
-                cursor: "pointer",
-                textTransform: "uppercase",
-              }}
-            >
-              SEARCH
-            </button>
           </div>
         </div>
+        {/* Search button: full width on mobile */}
+        <button
+          type="submit"
+          style={{
+            width: "100%",
+            background: "var(--accent)",
+            color: "#fff",
+            border: "2px solid var(--accent)",
+            padding: "14px 32px",
+            fontWeight: "900",
+            fontSize: "16px",
+            letterSpacing: "0.15em",
+            cursor: "pointer",
+            textTransform: "uppercase",
+            minHeight: "48px",
+          }}
+        >
+          SEARCH
+        </button>
       </form>
 
       {/* Count */}
@@ -208,7 +211,7 @@ export default function CardBrowser({
       {/* Grid */}
       {initialCards.length > 0 ? (
         <>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-3">
             {initialCards.map((card) => (
               <CardGridItem key={card.id} {...card} />
             ))}

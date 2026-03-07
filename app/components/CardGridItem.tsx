@@ -54,19 +54,22 @@ export function CardGridItem({ id, name, typeLine, manaCost, setCode, rarity, im
 
         {/* Info */}
         <div className="p-3" style={{ borderTop: "2px solid var(--accent)" }}>
-          <h3 className="font-black text-sm uppercase tracking-tight leading-tight truncate mb-1" title={name}
-              style={{ color: "var(--foreground)" }}>
+          <h3
+            className="font-black uppercase tracking-tight leading-tight truncate mb-1"
+            style={{ fontSize: "clamp(0.7rem, 2.5vw, 0.85rem)", color: "var(--foreground)" }}
+            title={name}
+          >
             {name}
           </h3>
-          <p className="text-xs truncate" style={{ color: "var(--muted-fg)" }}>
+          <p className="truncate" style={{ fontSize: "0.7rem", color: "var(--muted-fg)" }}>
             {typeLine}
           </p>
           <div className="flex items-center justify-between mt-2">
-            <span className="text-xs uppercase font-black" style={{ color: "var(--accent-light)" }}>
+            <span className="font-black uppercase" style={{ fontSize: "0.7rem", color: "var(--accent-light)" }}>
               {setCode.toUpperCase()}
             </span>
             {manaCost && (
-              <span className="text-xs font-bold" style={{ color: "var(--muted-fg)" }}>
+              <span className="font-bold" style={{ fontSize: "0.7rem", color: "var(--muted-fg)" }}>
                 {manaCost.replace(/[{}]/g, "")}
               </span>
             )}
