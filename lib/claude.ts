@@ -16,34 +16,24 @@ export interface CardForExplanation {
 }
 
 export async function explainCard(card: CardForExplanation): Promise<string> {
+  // Build a compact card summary — only include fields that add context
   const parts: string[] = [];
-
-  parts.push(`Card Name: ${card.name}`);
   parts.push(`Type: ${card.typeLine}`);
-  if (card.manaCost) parts.push(`Mana Cost: ${card.manaCost}`);
-  if (card.power && card.toughness)
-    parts.push(`Power/Toughness: ${card.power}/${card.toughness}`);
+  if (card.manaCost) parts.push(`Cost: ${card.manaCost.replace(/[{}]/g, "")}`);
+  if (card.power && card.toughness) parts.push(`P/T: ${card.power}/${card.toughness}`);
   if (card.loyalty) parts.push(`Loyalty: ${card.loyalty}`);
-  if (card.keywords?.length) parts.push(`Keywords: ${card.keywords.join(", ")}`);
-  if (card.oracleText) parts.push(`Card Text:\n${card.oracleText}`);
+  if (card.oracleText) parts.push(`Text: ${card.oracleText}`);
 
   const cardDetails = parts.join("\n");
 
   const message = await client.messages.create({
     model: "claude-haiku-4-5",
-    max_tokens: 1024,
+    max_tokens: 300,
+    system: "You explain Magic: The Gathering cards for new players. Be brief and plain. Never restate the card name. Use exactly these two headers on their own lines: \"What it does:\" and \"Why you'd play it:\". Each section: 2-3 sentences max.",
     messages: [
       {
         role: "user",
-        content: `You are an expert Magic: The Gathering player and deck builder. Given the following card, provide two things:
-
-1. **What it does**: Explain what this card does in plain English for someone new to the game. Be clear and concise (2-3 sentences). Focus on the mechanics, not the flavor. Briefly explain any key terms.
-
-2. **Why you'd play it**: Explain why a player would include this card in their deck. What strategies or archetypes does it fit into? What other cards or situations does it work well with? Keep this practical and specific (2-4 sentences).
-
-Do NOT start by restating the card's name. Format your response with "What it does:" and "Why you'd play it:" as plain-text headers on their own lines.
-
-${cardDetails}`,
+        content: cardDetails,
       },
     ],
   });
