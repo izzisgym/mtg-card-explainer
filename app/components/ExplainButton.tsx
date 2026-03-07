@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface ExplainButtonProps {
   cardId: string;
@@ -57,6 +57,14 @@ export default function ExplainButton({ cardId, initialExplanation }: ExplainBut
     }
   };
 
+  // Auto-explain on page load if no explanation exists yet
+  useEffect(() => {
+    if (!initialExplanation) {
+      handleExplain();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive_deps
+  }, []);
+
   if (explanation) {
     const parsed = parseExplanation(explanation);
     return (
@@ -95,26 +103,45 @@ export default function ExplainButton({ cardId, initialExplanation }: ExplainBut
           ERROR: {error}
         </p>
       )}
-      <button
-        onClick={handleExplain}
-        disabled={loading}
-        style={{
-          width: "100%",
-          padding: "18px",
-          background: loading ? "var(--muted)" : "var(--accent)",
-          color: "#fff",
-          border: "2px solid var(--accent)",
-          fontSize: "18px",
-          fontWeight: "900",
-          letterSpacing: "0.2em",
-          textTransform: "uppercase",
-          cursor: loading ? "not-allowed" : "pointer",
-          fontFamily: "inherit",
-          opacity: loading ? 0.7 : 1,
-        }}
-      >
-        {loading ? "THINKING..." : "EXPLAIN THIS CARD"}
-      </button>
+      {loading ? (
+        <div
+          style={{
+            width: "100%",
+            padding: "18px",
+            background: "var(--muted)",
+            border: "2px solid var(--accent)",
+            fontSize: "18px",
+            fontWeight: "900",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            fontFamily: "inherit",
+            color: "#fff",
+            opacity: 0.7,
+            textAlign: "center",
+          }}
+        >
+          THINKING...
+        </div>
+      ) : (
+        <button
+          onClick={handleExplain}
+          style={{
+            width: "100%",
+            padding: "18px",
+            background: "var(--accent)",
+            color: "#fff",
+            border: "2px solid var(--accent)",
+            fontSize: "18px",
+            fontWeight: "900",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            cursor: "pointer",
+            fontFamily: "inherit",
+          }}
+        >
+          EXPLAIN THIS CARD
+        </button>
+      )}
     </div>
   );
 }
