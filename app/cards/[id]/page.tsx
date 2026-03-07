@@ -4,6 +4,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { getCardById, getCardImageUrl, getCardOracleText } from "@/lib/scryfall";
 import ExplainButton from "@/app/components/ExplainButton";
+import ShareBar from "@/app/components/ShareBar";
 import type { Metadata } from "next";
 
 interface Props {
@@ -19,9 +20,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const card = await prisma.card.findUnique({ where: { id } });
     if (card) {
+      const title = `${card.name} | What does this Magic card do?`;
+      const description = card.oracleText?.slice(0, 160) ?? `Learn what ${card.name} does in plain English.`;
+      const url = `https://magic.izzisgym.com/cards/${id}`;
       return {
-        title: `${card.name} | What does this Magic card do?`,
-        description: card.oracleText?.slice(0, 160) ?? `Learn what ${card.name} does in plain English.`,
+        title,
+        description,
+        openGraph: {
+          title,
+          description,
+          url,
+          siteName: "What does this Magic card do?",
+          images: card.imageUrl ? [{ url: card.imageUrl, width: 488, height: 680, alt: card.name }] : [],
+          type: "website",
+        },
+        twitter: {
+          card: "summary_large_image",
+          title,
+          description,
+          images: card.imageUrl ? [card.imageUrl] : [],
+        },
       };
     }
   } catch {}
@@ -173,8 +191,10 @@ export default async function CardDetailPage({ params }: Props) {
             </p>
           </div>
 
-          {/* Card oracle text */}
-          {card.oracleText && (
+          {/* Share */}
+          <ShareBar cardName={card.name} cardUrl={`/cards/${card.id}`} />
+
+          {/* Card oracle text */}          {card.oracleText && (
             <div style={{ borderLeft: "4px solid var(--accent)", paddingLeft: "20px" }}>
               <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "var(--accent-light)" }}>
                 What the Card Says
