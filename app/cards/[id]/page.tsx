@@ -91,7 +91,7 @@ export default async function CardDetailPage({ params }: Props) {
         ← BACK
       </Link>
 
-      <div className="grid grid-cols-1 md:grid-cols-[minmax(280px,360px)_1fr] gap-8 lg:gap-16 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-[minmax(300px,380px)_1fr] gap-10 lg:gap-16 items-start">
         {/* Image */}
         <div className="md:sticky md:top-8">
           <div
@@ -106,7 +106,7 @@ export default async function CardDetailPage({ params }: Props) {
                 priority
                 className="object-contain"
                 unoptimized
-                sizes="(max-width: 768px) 90vw, 400px"
+                sizes="(max-width: 768px) 90vw, 380px"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center" style={{ background: "#1a1a1a" }}>
@@ -114,43 +114,23 @@ export default async function CardDetailPage({ params }: Props) {
               </div>
             )}
           </div>
-        </div>
 
-        {/* Details */}
-        <div className="flex flex-col gap-5">
-          {/* Name + rarity */}
-          <div style={{ borderBottom: "3px solid var(--accent)", paddingBottom: "16px" }}>
-            <h1 className="text-4xl font-black uppercase" style={{ letterSpacing: "-0.02em", lineHeight: 1.1 }}>{card.name}</h1>
-            <div className="flex items-center gap-3 mt-3 flex-wrap">
-              <span className="text-base uppercase tracking-wide font-bold" style={{ color: "var(--muted-fg)" }}>
-                {card.typeLine}
-              </span>
-              {card.rarity && (
-                <span
-                  className="text-sm font-black uppercase px-2 py-0.5"
-                  style={{ background: "var(--accent)", color: "#fff" }}
-                >
-                  {card.rarity}
-                </span>
-              )}
-            </div>
+          {/* Stats under image — scannable at a glance */}
+          <div className="mt-4 flex flex-col gap-2">
+            {card.manaCost && <StatRow label="Mana Cost" value={card.manaCost.replace(/[{}]/g, "")} />}
+            {card.power && card.toughness && <StatRow label="Power / Toughness" value={`${card.power} / ${card.toughness}`} />}
+            {card.loyalty && <StatRow label="Loyalty" value={card.loyalty} />}
+            {card.setName && <StatRow label="Set" value={`${card.setName} (${card.setCode.toUpperCase()})`} />}
+            {card.rarity && <StatRow label="Rarity" value={card.rarity.charAt(0).toUpperCase() + card.rarity.slice(1)} />}
           </div>
 
-          {/* Stats */}
-          <div className="flex flex-wrap gap-2">
-            {card.manaCost && <StatBadge label="MANA" value={card.manaCost.replace(/[{}]/g, "")} />}
-            {card.power && card.toughness && <StatBadge label="P/T" value={`${card.power}/${card.toughness}`} />}
-            {card.loyalty && <StatBadge label="LOYALTY" value={card.loyalty} />}
-            {card.setName && <StatBadge label="SET" value={`${card.setName} — ${card.setCode.toUpperCase()}`} />}
-          </div>
-
-          {/* Colors */}
+          {/* Color identity */}
           {card.colors.length > 0 && (
-            <div className="flex gap-2 flex-wrap">
+            <div className="mt-3 flex gap-2 flex-wrap">
               {card.colors.map((c) => (
                 <span
                   key={c}
-                  className="text-sm font-black px-3 py-1 uppercase tracking-widest"
+                  className="text-xs font-black px-3 py-1 uppercase tracking-widest"
                   style={{ border: "2px solid var(--accent)", color: "var(--foreground)" }}
                 >
                   {COLOR_NAMES[c] ?? c}
@@ -161,11 +141,11 @@ export default async function CardDetailPage({ params }: Props) {
 
           {/* Keywords */}
           {card.keywords.length > 0 && (
-            <div className="flex flex-wrap gap-2">
+            <div className="mt-3 flex flex-wrap gap-2">
               {card.keywords.map((kw) => (
                 <span
                   key={kw}
-                  className="text-sm font-black px-3 py-1 uppercase tracking-wide"
+                  className="text-xs font-black px-3 py-1 uppercase tracking-wide"
                   style={{ background: "var(--accent)", color: "#fff" }}
                 >
                   {kw}
@@ -173,40 +153,56 @@ export default async function CardDetailPage({ params }: Props) {
               ))}
             </div>
           )}
+        </div>
 
-          {/* Card text */}
+        {/* Details — max line length ~75ch for readability */}
+        <div className="flex flex-col gap-6" style={{ maxWidth: "72ch" }}>
+          {/* Name + type */}
+          <div style={{ borderBottom: "3px solid var(--accent)", paddingBottom: "20px" }}>
+            <h1
+              className="font-black uppercase"
+              style={{ fontSize: "clamp(2rem, 5vw, 3rem)", letterSpacing: "-0.02em", lineHeight: 1.1 }}
+            >
+              {card.name}
+            </h1>
+            <p className="mt-2 text-lg font-bold uppercase tracking-wide" style={{ color: "var(--muted-fg)" }}>
+              {card.typeLine}
+            </p>
+          </div>
+
+          {/* Card oracle text */}
           {card.oracleText && (
-            <div style={{ border: "2px solid var(--accent)", padding: "20px" }}>
-              <p
-                className="text-xs font-black uppercase tracking-widest mb-3"
-                style={{ color: "var(--accent-light)" }}
-              >
+            <div style={{ borderLeft: "4px solid var(--accent)", paddingLeft: "20px" }}>
+              <p className="text-xs font-black uppercase tracking-widest mb-3" style={{ color: "var(--accent-light)" }}>
                 What the Card Says
               </p>
-              <p className="text-base leading-relaxed whitespace-pre-wrap">{card.oracleText}</p>
+              <p
+                className="leading-relaxed whitespace-pre-wrap"
+                style={{ fontSize: "1.05rem", color: "var(--foreground)", opacity: 0.85 }}
+              >
+                {card.oracleText}
+              </p>
             </div>
           )}
 
-          {/* Explain */}
+          {/* AI Explanation */}
           <ExplainButton cardId={card.id} initialExplanation={card.explanation} />
         </div>
       </div>
 
       {/* Other Versions */}
       {otherVersions.length > 0 && (
-        <div className="mt-12">
-          <h2
-            className="brutalist-heading text-base font-black uppercase tracking-widest mb-5"
-          >
+        <div className="mt-16">
+          <h2 className="brutalist-heading text-base font-black uppercase tracking-widest mb-6">
             Other Versions ({otherVersions.length})
           </h2>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-4">
             {otherVersions.map((v) => (
               <Link
                 key={v.id}
                 href={`/cards/${v.id}`}
-                className="version-thumb flex flex-col items-center gap-1 p-2"
-                style={{ border: "2px solid var(--accent)", width: "90px", background: "var(--card-bg)" }}
+                className="version-thumb flex flex-col items-center gap-2 p-2"
+                style={{ border: "2px solid var(--accent)", width: "120px", background: "var(--card-bg)" }}
               >
                 {v.imageUrl ? (
                   <div className="relative w-full overflow-hidden" style={{ aspectRatio: "5/7" }}>
@@ -216,7 +212,7 @@ export default async function CardDetailPage({ params }: Props) {
                       fill
                       className="object-contain"
                       unoptimized
-                      sizes="90px"
+                      sizes="120px"
                     />
                   </div>
                 ) : (
@@ -227,11 +223,8 @@ export default async function CardDetailPage({ params }: Props) {
                     ?
                   </div>
                 )}
-                <span
-                  className="text-xs font-black uppercase tracking-wide text-center"
-                  style={{ color: "var(--accent-light)" }}
-                >
-                  {v.setCode.toUpperCase()}
+                <span className="text-xs font-black uppercase tracking-wide text-center" style={{ color: "var(--accent-light)" }}>
+                  {v.setName ?? v.setCode.toUpperCase()}
                 </span>
               </Link>
             ))}
@@ -242,14 +235,18 @@ export default async function CardDetailPage({ params }: Props) {
   );
 }
 
-function StatBadge({ label, value }: { label: string; value: string }) {
+function StatRow({ label, value }: { label: string; value: string }) {
   return (
     <div
-      className="text-sm px-3 py-1.5"
-      style={{ border: "2px solid var(--accent)", background: "var(--card-bg)" }}
+      className="flex items-baseline justify-between gap-4 py-2 px-3"
+      style={{ borderBottom: "1px solid var(--muted)" }}
     >
-      <span className="font-bold uppercase tracking-wide" style={{ color: "var(--muted-fg)" }}>{label}: </span>
-      <span className="font-black" style={{ color: "var(--foreground)" }}>{value}</span>
+      <span className="text-xs font-black uppercase tracking-widest shrink-0" style={{ color: "var(--muted-fg)" }}>
+        {label}
+      </span>
+      <span className="text-sm font-bold text-right" style={{ color: "var(--foreground)" }}>
+        {value}
+      </span>
     </div>
   );
 }

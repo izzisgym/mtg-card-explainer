@@ -29,11 +29,25 @@ function SentenceParagraphs({ text }: { text: string }) {
   return (
     <>
       {sentences.map((sentence, i) => (
-        <p key={i} className="text-lg leading-relaxed mb-3 last:mb-0">
+        <p key={i} className="leading-relaxed mb-4 last:mb-0" style={{ fontSize: "1.1rem" }}>
           {sentence}
         </p>
       ))}
     </>
+  );
+}
+
+function Section({ label, text }: { label: string; text: string }) {
+  return (
+    <div style={{ borderLeft: "4px solid var(--accent)", paddingLeft: "20px", paddingTop: "4px", paddingBottom: "4px" }}>
+      <p
+        className="text-xs font-black uppercase tracking-widest mb-3"
+        style={{ color: "var(--accent-light)" }}
+      >
+        {label}
+      </p>
+      <SentenceParagraphs text={text} />
+    </div>
   );
 }
 
@@ -68,24 +82,15 @@ export default function ExplainButton({ cardId, initialExplanation }: ExplainBut
   if (explanation) {
     const parsed = parseExplanation(explanation);
     return (
-      <div style={{ border: "2px solid var(--accent)" }}>
+      <div>
         {parsed ? (
           <>
-            <div style={{ padding: "24px 28px", borderBottom: "2px solid var(--accent)" }}>
-              <p className="text-xs font-black uppercase tracking-widest mb-4" style={{ color: "var(--accent-light)" }}>
-                What Does That Mean
-              </p>
-              <SentenceParagraphs text={parsed.whatItDoes} />
-            </div>
-            <div style={{ padding: "24px 28px" }}>
-              <p className="text-xs font-black uppercase tracking-widest mb-4" style={{ color: "var(--accent-light)" }}>
-                Why Is That Important
-              </p>
-              <SentenceParagraphs text={parsed.whyPlay} />
-            </div>
+            <Section label="What Does That Mean" text={parsed.whatItDoes} />
+            <div style={{ height: "1px", background: "var(--muted)", margin: "8px 0" }} />
+            <Section label="Why Is That Important" text={parsed.whyPlay} />
           </>
         ) : (
-          <div style={{ padding: "24px 28px" }}>
+          <div style={{ borderLeft: "4px solid var(--accent)", paddingLeft: "20px" }}>
             <SentenceParagraphs text={explanation} />
           </div>
         )}
