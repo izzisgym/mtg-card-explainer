@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const card = await prisma.card.findUnique({ where: { id } });
     if (card) {
-      const title = `${card.name} | What does this Magic card do?`;
+      const title = `${card.name} | SpellCheck`;
       const description = card.oracleText?.slice(0, 160) ?? `Learn what ${card.name} does in plain English.`;
       const url = `https://magic.izzisgym.com/cards/${id}`;
       return {
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           title,
           description,
           url,
-          siteName: "What does this Magic card do?",
+          siteName: "SpellCheck",
           images: card.imageUrl ? [{ url: card.imageUrl, width: 488, height: 680, alt: card.name }] : [],
           type: "website",
         },

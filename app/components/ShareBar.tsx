@@ -15,7 +15,7 @@ export default function ShareBar({ cardName, cardUrl }: ShareBarProps) {
     setCanNativeShare(!!navigator.share);
   }, []);
 
-  const shareText = `What does ${cardName} do? Find out here:`;
+  const shareText = `What does ${cardName} do? Find out on SpellCheck:`;
   const fullUrl = `https://magic.izzisgym.com${cardUrl}`;
 
   // Native share sheet (iOS/Android — opens iMessage, WhatsApp, etc.)
